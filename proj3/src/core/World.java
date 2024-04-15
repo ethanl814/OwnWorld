@@ -7,8 +7,8 @@ import tileengine.Tileset;
 import java.util.Random;
 
 public class World {
-    static final int DEFAULT_WIDTH = 50;
-    static final int DEFAULT_HEIGHT = 50;
+    static final int DEFAULT_WIDTH = 100;
+    static final int DEFAULT_HEIGHT = 100;
     TERenderer ter;
     TETile[][] board;
     Random random;
