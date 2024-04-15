@@ -3,6 +3,8 @@ package core;
 import tileengine.TETile;
 import tileengine.Tileset;
 
+import static java.lang.Long.parseLong;
+
 public class AutograderBuddy {
 
     /**
@@ -18,8 +20,8 @@ public class AutograderBuddy {
      * @return the 2D TETile[][] representing the state of the world
      */
     public static TETile[][] getWorldFromInput(String input) {
-
-        throw new RuntimeException("Please fill out AutograderBuddy!");
+        World world = new World(parseLong(input));
+        return world.grow_World();
 
     }
 

@@ -3,10 +3,10 @@ package core;
 import tileengine.TERenderer;
 import tileengine.TETile;
 import tileengine.Tileset;
+import utils.FileUtils;
 import utils.RandomUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -20,6 +20,7 @@ public class World {
     int height;
     int total_area;
     int area_used;
+    private static final String SAVE_FILE = "src/save.txt";
     private boolean isGameOver;
     public World(long seed) {
         width = DEFAULT_WIDTH;
@@ -33,24 +34,38 @@ public class World {
         total_area = width * height;
         area_used = 0;
     }
-    private void fillWithNothing(TETile[][] tiles) {
-        int height = tiles[0].length;
-        int width = tiles.length;
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = Tileset.NOTHING;
+
+    public String showWorld() {
+        String ret = "";
+        for (int y = height - 1; y >= 0; y--) {
+            ret = ret + "\n";
+            for (int x = 0; x < width; x++) {
+                if (board[x][y] == Tileset.WALL) {
+                    ret = ret + "#";
+                } else {
+                    ret = ret + "*";
+                }
             }
         }
+        ret = ret + "\n";
+        FileUtils.writeFile(SAVE_FILE, ret);
+        return ret;
     }
+
+    public TETile[][] grow_World() {
+        grow_Rooms();
+        return board;
+    }
+
     public void putHallway() {
 
     }
-    public void grow_Rooms() {
+    private void grow_Rooms() {
         List<Node> rooms = createPoints();
         for (int i = 0; i < rooms.size(); i++) {
             Node now = rooms.get(i);
             if (check(now, rooms)) {
-                populate(now);
+                populateRoom(now);
             }
         }
     }
@@ -74,11 +89,8 @@ public class World {
         }
         return mids;
     }
-    public void putWalls() {
 
-    }
-
-    private void populate(Node node) {
+    private void populateRoom(Node node) {
         for (int i = node.x; i < node.x_bound; i++) {
             for (int j = node.y; j < node.y_bound; j++) {
                 if (i == node.x || i == node.x_bound || j == node.y || j == node.y_bound) {
@@ -95,21 +107,28 @@ public class World {
         TETile botL = board[node.x][node.y];
         TETile topR = board[node.x_bound][node.y_bound];
         TETile botR = board[node.x_bound][node.y];
-        if (node.area() > 16) {
+        if (node.area() < 16) {
             nodes.remove(node);
             return false;
         }
-        if (node.x_bound > 100) {
-            node.x_bound = 100;
-        } else if (node.y_bound > 100) {
-            node.y_bound = 100;
-        } else if (topL != Tileset.NOTHING || topR != Tileset.NOTHING) {
+        if (topL != Tileset.NOTHING || topR != Tileset.NOTHING) {
             node.y_bound = node.y_bound - 1;
+            check(node, nodes);
         } else if (botR != Tileset.NOTHING && botL != Tileset.NOTHING) {
             node.y = node.y + 1;
+            check(node, nodes);
         }
-        check(node, nodes);
         return true;
+    }
+
+    private void fillWithNothing(TETile[][] tiles) {
+        int height = tiles[0].length;
+        int width = tiles.length;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                tiles[x][y] = Tileset.NOTHING;
+            }
+        }
     }
 
     private class Node implements Comparable<Node> {
@@ -117,14 +136,18 @@ public class World {
         public int y;
         public int x_bound;
         public int y_bound;
-
         public Node(int x, int y) {
             this.x = x;
             this.y = y;
             x_bound = x + RandomUtils.uniform(seed, 5, 12);
             y_bound = y + RandomUtils.uniform(seed, 5, 12);
+            if (x_bound >= 100) {
+                x_bound = 99;
+            } else if (y_bound >= 100) {
+                y_bound = 99;
+            }
         }
-        public int area() {
+        private int area() {
             return (x_bound - x) * (y_bound - y);
         }
         @Override

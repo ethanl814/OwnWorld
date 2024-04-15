@@ -8,6 +8,8 @@ public class Main {
         System.out.println("Enter valid string with format \"N#######S\"");
         String info = scan.nextLine();
         World world = getWorldFromInput(info);
+        world.grow_World();
+        System.out.println(world.showWorld());
     }
     public static World getWorldFromInput(String info) {
         String numberStr = info.substring(1, info.length() - 1);  // Remove the first and last character
