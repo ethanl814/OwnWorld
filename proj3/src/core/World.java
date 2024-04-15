@@ -95,18 +95,20 @@ public class World {
         TETile botL = board[node.x][node.y];
         TETile topR = board[node.x_bound][node.y_bound];
         TETile botR = board[node.x_bound][node.y];
-        if (topL != Tileset.NOTHING || topR != Tileset.NOTHING) {
-            node.y_bound = node.y_bound - 1;
-            check(node, nodes);
-        }
-        if (botR != Tileset.NOTHING && botL != Tileset.NOTHING) {
-            node.y = node.y + 1;
-            check(node, nodes);
-        }
         if (node.area() > 16) {
             nodes.remove(node);
             return false;
         }
+        if (node.x_bound > 100) {
+            node.x_bound = 100;
+        } else if (node.y_bound > 100) {
+            node.y_bound = 100;
+        } else if (topL != Tileset.NOTHING || topR != Tileset.NOTHING) {
+            node.y_bound = node.y_bound - 1;
+        } else if (botR != Tileset.NOTHING && botL != Tileset.NOTHING) {
+            node.y = node.y + 1;
+        }
+        check(node, nodes);
         return true;
     }
 
