@@ -21,7 +21,7 @@ public class AutograderBuddy {
      */
     public static TETile[][] getWorldFromInput(String input) {
         World world = new World(parseLong(input));
-        return world.grow_World();
+        return world.groWorld();
 
     }
 
