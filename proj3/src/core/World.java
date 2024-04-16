@@ -9,10 +9,11 @@ import utils.RandomUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class World {
-    static final int DEFAULT_WIDTH = 100;
-    static final int DEFAULT_HEIGHT = 100;
+    static final int DEFAULT_WIDTH = 50;
+    static final int DEFAULT_HEIGHT = 50;
     TERenderer ter;
     TETile[][] board;
     Random seed;
@@ -20,8 +21,10 @@ public class World {
     int height;
     int total_area;
     int area_used;
+    private List<Room> rooms = new ArrayList<>();
     private static final String SAVE_FILE = "src/save.txt";
     private boolean isGameOver;
+
     public World(long seed) {
         width = DEFAULT_WIDTH;
         height = DEFAULT_HEIGHT;
@@ -35,21 +38,15 @@ public class World {
         area_used = 0;
     }
 
-    public String showWorld() {
-        String ret = "";
-        for (int y = height - 1; y >= 0; y--) {
-            ret = ret + "\n";
-            for (int x = 0; x < width; x++) {
-                if (board[x][y] == Tileset.WALL) {
-                    ret = ret + "#";
-                } else {
-                    ret = ret + "*";
-                }
-            }
-        }
-        ret = ret + "\n";
-        FileUtils.writeFile(SAVE_FILE, ret);
-        return ret;
+    public void runGame() {
+        renderBoard();
+    }
+
+    //renders the board(for main)
+    private void renderBoard() {
+        System.out.println(board);
+        ter.drawTiles(board);
+        StdDraw.show();
     }
 
     public TETile[][] grow_World() {
@@ -60,40 +57,60 @@ public class World {
     public void putHallway() {
 
     }
+
+    //grows all valid rooms
     private void grow_Rooms() {
-        List<Node> rooms = createPoints();
-        for (int i = 0; i < rooms.size(); i++) {
-            Node now = rooms.get(i);
-            if (check(now, rooms)) {
+        grow_RoomsHelper();
+        for (int i = rooms.size() - 1; i >= 0; i--) {
+                if (!isValidRoom(rooms.get(i))) {
+                    rooms.remove(rooms.get(i));
+                }
+            }
+        fillWithNothing(board);
+        for (Room room: rooms) {
+            if (check(room)) {
+                populateRoom(room);
+            }
+        }
+        if (area_used < (total_area / 3)) {
+            fillWithNothing(board);
+            grow_RoomsHelper();
+            grow_Rooms();
+        }
+    }
+
+    //recursively grows rooms
+    private void grow_RoomsHelper() {
+        int i = createPoint();
+        if (i > 0) {
+            Room now = rooms.get(i);
+            if (check(now)) {
                 populateRoom(now);
             }
         }
-    }
-
-    private List<Node> createPoints() {
-        int amt = RandomUtils.uniform(seed, 10, 16);
-        List<Node> mids = new ArrayList<>();
-        for (int i = 0; i < amt; i++) {
-            int x = RandomUtils.uniform(seed, 0, 95);
-            int y = RandomUtils.uniform(seed, 0, 95);
-            Node now = new Node(x, y);
-            int passed = 0;
-            for (Node other: mids) {
-                if (other.compareTo(now) > 0) {
-                    passed++;
-                }
-            }
-            if (passed == mids.size()) {
-                mids.add(now);
-            }
+        if (area_used < (total_area / 3)) {
+            grow_RoomsHelper();
         }
-        return mids;
     }
 
-    private void populateRoom(Node node) {
-        for (int i = node.x; i < node.x_bound; i++) {
-            for (int j = node.y; j < node.y_bound; j++) {
-                if (i == node.x || i == node.x_bound || j == node.y || j == node.y_bound) {
+    //creates a valid room object
+    private int createPoint() {
+        int x = RandomUtils.uniform(seed, 1, width - 1);
+        int y = RandomUtils.uniform(seed, 1, height - 1);
+        Room now = new Room(x, y);
+        if (check(now)) {
+            rooms.add(now);
+            return rooms.indexOf(now);
+        }
+        return -1;
+    }
+
+    //Populates a room with tiles
+    private void populateRoom(Room room) {
+        area_used = area_used + room.area();
+        for (int i = room.x; i <= room.x_bound; i++) {
+            for (int j = room.y; j <= room.y_bound; j++) {
+                if (i == room.x || i == room.x_bound || j == room.y || j == room.y_bound) {
                     board[i][j] = Tileset.WALL;
                 } else {
                     board[i][j] = Tileset.FLOOR;
@@ -102,25 +119,27 @@ public class World {
         }
     }
 
-    private boolean check(Node node, List<Node> nodes) {
-        TETile topL = board[node.x][node.y_bound];
-        TETile botL = board[node.x][node.y];
-        TETile topR = board[node.x_bound][node.y_bound];
-        TETile botR = board[node.x_bound][node.y];
-        if (node.area() < 16) {
-            nodes.remove(node);
+    //checks if the room created is valid(doesn't work for overlapping rooms)
+    private boolean check(Room room) {
+        TETile topL = board[room.x][room.y_bound];
+        TETile botL = board[room.x][room.y];
+        TETile topR = board[room.x_bound][room.y_bound];
+        TETile botR = board[room.x_bound][room.y];
+        if ((room.x_bound - room.x - 2) < 3 || (room.y_bound - room.y - 2) < 3) {
             return false;
         }
         if (topL != Tileset.NOTHING || topR != Tileset.NOTHING) {
-            node.y_bound = node.y_bound - 1;
-            check(node, nodes);
-        } else if (botR != Tileset.NOTHING && botL != Tileset.NOTHING) {
-            node.y = node.y + 1;
-            check(node, nodes);
+            room.y_bound = room.y_bound - 1;
+            check(room);
+        }
+        if (botR != Tileset.NOTHING || botL != Tileset.NOTHING) {
+            room.y = room.y + 1;
+            check(room);
         }
         return true;
     }
 
+    //fills the board with nothing
     private void fillWithNothing(TETile[][] tiles) {
         int height = tiles[0].length;
         int width = tiles.length;
@@ -131,30 +150,48 @@ public class World {
         }
     }
 
-    private class Node implements Comparable<Node> {
-        public int x;
-        public int y;
-        public int x_bound;
-        public int y_bound;
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-            x_bound = x + RandomUtils.uniform(seed, 5, 12);
-            y_bound = y + RandomUtils.uniform(seed, 5, 12);
-            if (x_bound >= 100) {
-                x_bound = 99;
-            } else if (y_bound >= 100) {
-                y_bound = 99;
+    //checks if a room is valid(meant for deleting overlapping rooms)
+    private boolean isValidRoom(Room room) {
+        for(int x = room.x; x <= room.x_bound; x++) {
+            for (int y = room.y; y <= room.y_bound; y++) {
+                if (x == room.x || x == room.x_bound || y == room.y || y == room.y_bound) {
+                    if (board[x][y] != Tileset.WALL) {
+                        return false;
+                    }
+                } else {
+                    if (board[x][y] != Tileset.FLOOR) {
+                        return false;
+                    }
+                }
             }
         }
+        return true;
+    }
+
+    //class for rooms, each room is a Room object
+    private class Room {
+        public int x; //bottom left x coord
+        public int y; //bottom left y coord
+        public int x_bound; //top right x coord
+        public int y_bound; //top right y coord
+
+        //initializes a room, makes sure it fits in the board
+        public Room(int x, int y) {
+            this.x = x;
+            this.y = y;
+            x_bound = x + RandomUtils.uniform(seed, 4, 9); // binds a room with the values in randomutils
+            y_bound = y + RandomUtils.uniform(seed, 4, 9);
+            if (x_bound >= width - 1) { //ensures room fits
+                x_bound = width - 2;
+            }
+            if (y_bound >= height - 1) {
+                y_bound = height - 2;
+            }
+        }
+
+        //area of a room
         private int area() {
             return (x_bound - x) * (y_bound - y);
-        }
-        @Override
-        public int compareTo(Node other) {
-            if ((Math.abs(this.x - other.x) <= 4) && (Math.abs(this.y - other.y) <= 4)) {
-                return -1;
-            } else return 1;
         }
     }
 }
