@@ -1,5 +1,6 @@
 package core;
 
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import tileengine.TERenderer;
 import tileengine.TETile;
 import tileengine.Tileset;
@@ -12,17 +13,18 @@ import java.util.Random;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class World {
-    static final int DEFAULT_WIDTH = 50;
-    static final int DEFAULT_HEIGHT = 50;
-    TERenderer ter;
-    TETile[][] board;
-    Random seed;
-    int width;
-    int height;
-    int total_area;
-    int area_used;
+    private static final int DEFAULT_WIDTH = 50;
+    private static final int DEFAULT_HEIGHT = 50;
+    private TERenderer ter;
+    private TETile[][] board;
+//    private TETile[][] halls2;
+    private Random seed;
+    private int width;
+    private int height;
+    private int total_area;
+    private int area_used;
     private List<Room> rooms = new ArrayList<>();
-    private static final String SAVE_FILE = "src/save.txt";
+    private WeightedQuickUnionUF halls;
     private boolean isGameOver;
 
     public World(long seed) {
@@ -36,6 +38,8 @@ public class World {
         board = nothingWorld;
         total_area = width * height;
         area_used = 0;
+//        halls2 = new TETile[width][height];
+//        fillWithNothing(halls2);
     }
 
     public void runGame() {
@@ -44,6 +48,9 @@ public class World {
 
     //renders the board(for main)
     private void renderBoard() {
+//        System.out.println(halls2);
+//        ter.drawTiles(halls2);
+//        StdDraw.show();
         System.out.println(board);
         ter.drawTiles(board);
         StdDraw.show();
@@ -51,11 +58,98 @@ public class World {
 
     public TETile[][] grow_World() {
         grow_Rooms();
+        halls = new WeightedQuickUnionUF(rooms.size());
+        growHallways();
         return board;
     }
 
-    public void putHallway() {
+    private void growHallways() {
+//        int numHalls = RandomUtils.uniform(seed, rooms.size(), 2 * rooms.size());
+//        for (int i = 0; i < numHalls; i++) {
+//            int index = i;
+//            if (i >= rooms.size()) {
+//                index = i - rooms.size();
+//                connect(rooms.get(index), rooms.get(index + 1));
+//            } else if (i == rooms.size() - 1) {
+//                connect(rooms.get(i), rooms.get(0));
+//            } else {
+//                connect(rooms.get(index), rooms.get(index + 1));
+//            }
+//        }
+        connect(rooms.get(0), rooms.get(1));
+    }
 
+    //connects 2 rooms in a random way
+    private void connect(Room from, Room to) {
+        int startX = Math.min(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound ));
+        int startY = Math.min(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
+        int endX = Math.max(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound));
+        int endY = Math.max(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
+
+
+        int whichFirst = RandomUtils.uniform(seed, 0 , 2);
+        if (whichFirst == 0) {
+            connectY(startX, endX, startY, endY);
+        } else {
+            connectX(startX, endX, startY, endY);
+        }
+        halls.union(rooms.indexOf(from), rooms.indexOf(to));
+    }
+
+    //Connects 2 rooms, goes up then right
+    private void connectX(int startX, int endX, int startY, int endY) {
+        int x = startX;
+        for (int y = startY; y < endY; y++) {
+            if (board[x + 1][y] == Tileset.NOTHING) {
+                board[x + 1][y] = Tileset.WALL;
+            }
+            if (!(x == startX && y == startY && board[x][y] == Tileset.WALL)) {
+                board[x][y] = Tileset.FLOOR;
+            }
+            if (board[x - 1][y] == Tileset.NOTHING) {
+                board[x - 1][y] = Tileset.WALL;
+            }
+        }
+        int y = endY;
+        for (x = startX; x < endX; x++) {
+            if (board[x][y + 1] == Tileset.NOTHING) {
+                board[x][y + 1] = Tileset.WALL;
+            }
+            if (!(y == endY && x == endX && board[x][y] == Tileset.WALL)) {
+                board[x][y] = Tileset.FLOOR;
+            }
+            if (board[x][y - 1] == Tileset.NOTHING) {
+                board[x][y - 1] = Tileset.WALL;
+            }
+        }
+    }
+
+    //connects 2 rooms, goes right then up
+    private void connectY(int startX, int endX, int startY, int endY) {
+        int y = startY;
+        for (int x = startX; x < endX; x++) {
+            if (board[x][y + 1] == Tileset.NOTHING) {
+                board[x][y + 1] = Tileset.WALL;
+            }
+            if (!(y == startY && x == startX && board[x][y] == Tileset.WALL)) {
+                board[x][y] = Tileset.FLOOR;
+            }
+            if (board[x][y - 1] == Tileset.NOTHING) {
+                board[x][y - 1] = Tileset.WALL;
+            }
+        }
+        int x = endX;
+        for (y = startY; y < endY; y++) {
+            if (board[x + 1][y] == Tileset.NOTHING) {
+                board[x + 1][y] = Tileset.WALL;
+            }
+            if (!(x == endX && y == endY && board[x][y] == Tileset.WALL)) {
+                board[x][y] = Tileset.FLOOR;
+            }
+            if (board[x - 1][y] == Tileset.NOTHING) {
+                board[x - 1][y] = Tileset.WALL;
+            }
+        }
     }
 
     //grows all valid rooms

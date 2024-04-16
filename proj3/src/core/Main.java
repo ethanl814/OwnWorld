@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-        World fake = new World(873498);
+        World fake = new World(865781);
         fake.grow_World();
         fake.runGame();
 
