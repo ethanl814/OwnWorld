@@ -1,5 +1,6 @@
 package core;
 
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import tileengine.TERenderer;
 import tileengine.TETile;
@@ -16,7 +17,7 @@ public class World {
     private static final int DEFAULT_HEIGHT = 50;
     private TERenderer ter;
     private TETile[][] board;
-//    private TETile[][] halls2;
+    private TETile[][] halls2;
     private Random seed;
     private int width;
     private int height;
@@ -37,8 +38,8 @@ public class World {
         board = nothingWorld;
         total_area = width * height;
         area_used = 0;
-//        halls2 = new TETile[width][height];
-//        fillWithNothing(halls2);
+        halls2 = new TETile[width][height];
+        fillWithNothing(halls2);
     }
 
     public void runGame() {
@@ -62,45 +63,8 @@ public class World {
         return board;
     }
 
-//    private List<Room> hallTraversal () {
-//        List<Room> ret = new ArrayList<>();
-//        int i = RandomUtils.uniform(seed, 0, rooms.size());
-//        Room base = rooms.get(i);
-//        TreeMap<Double, List<Room>> penalties = new TreeMap<>();
-//        for (Room room: rooms) {
-//            List<Room> assRooms = new ArrayList<>();
-//            assRooms.add(room);
-//            if (penalties.get(base.distance(room)) == null) {
-//                penalties.put(base.distance(room), assRooms);
-//            } else {
-//                assRooms.addAll(penalties.get(base.distance(room)));
-//                penalties.put(base.distance(room), assRooms);
-//            }
-//        }
-//        List<Double> keys = new ArrayList<>(penalties.keySet());
-//        Collections.sort(keys, Collections.reverseOrder());
-//        for (Double key: keys) {
-//            List<Room> thisRooms = penalties.get(key);
-//            for (Room these: thisRooms) {
-//                ret.add(these);
-//            }
-//        }
-//        return ret;
-//    }
 
     private void growHallways() {
-//        int numHalls = RandomUtils.uniform(seed, rooms.size(), 2 * rooms.size());
-//        for (int i = 0; i < numHalls; i++) {
-//            int index = i;
-//            if (i >= rooms.size()) {
-//                index = i - rooms.size();
-//                connect(rooms.get(index), rooms.get(index + 1));
-//            } else if (i == rooms.size() - 1) {
-//                connect(rooms.get(i), rooms.get(0));
-//            } else {
-//                connect(rooms.get(index), rooms.get(index + 1));
-//            }
-//        }
         List<Room> ret = new ArrayList<>();
         int i = RandomUtils.uniform(seed, 0, rooms.size());
         Room base = rooms.get(i);
@@ -118,37 +82,55 @@ public class World {
             return;
         }
         for (int j = 0; j < curr.closest().size(); j++) {
-            if (iter == 3) {
+            Room nex = curr.closest().get(j);
+            int nexIndex = rooms.indexOf(nex);
+            int currIndex = rooms.indexOf(curr);
+            if (iter == 12) {
                 return;
             }
-            if (!halls.connected(rooms.indexOf(curr), rooms.indexOf(curr.closest().get(j)))) {
-                connect(curr, curr.closest().get(j));
-                growHallwaysHelper(curr.closest().get(j), iter + 1);
+            if (!halls.connected(currIndex, nexIndex)) {
+                halls.union(currIndex, nexIndex);
+                connect(curr.center, nex.center);
+                growHallwaysHelper(nex, iter + 1);
                 break;
             }
         }
     }
 
     //connects 2 rooms in a random way
-    private void connect(Room from, Room to) {
-        int startX = Math.min(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound ));
-        int startY = Math.min(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
-        int endX = Math.max(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound));
-        int endY = Math.max(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
+//    private void connect(Room from, Room to) {
+//        int startX = Math.min(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound ));
+//        int startY = Math.min(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
+//        int endX = Math.max(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound));
+//        int endY = Math.max(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
+//
+//        if (to.x > from.x) {
+//            if (to.y > from.y) {
+//                connectY
+//            } else {
+//
+//            }
+//        } else {
+//            if (to.y > from.y) {
+//
+//            } else {
+//
+//            }
+//        }
+//
+//        int whichFirst = RandomUtils.uniform(seed, 0 , 2);
+//        if (whichFirst == 0) {
+//            connectY(startX, endX, startY, endY);
+//        } else {
+//            connectX(startX, endX, startY, endY);
+//        }
+//        halls.union(rooms.indexOf(from), rooms.indexOf(to));
+//    }
 
-
-        int whichFirst = RandomUtils.uniform(seed, 0 , 2);
-        if (whichFirst == 0) {
-            connectY(startX, endX, startY, endY);
-        } else {
-            connectX(startX, endX, startY, endY);
-        }
-        halls.union(rooms.indexOf(from), rooms.indexOf(to));
-    }
 
     //Connects 2 rooms, goes up then right
     private void connectX(int startX, int endX, int startY, int endY) {
-        int x = startX;
+        int x = startX; //vertically
         for (int y = startY; y < endY; y++) {
             if (board[x + 1][y] == Tileset.NOTHING) {
                 board[x + 1][y] = Tileset.WALL;
@@ -160,7 +142,7 @@ public class World {
                 board[x - 1][y] = Tileset.WALL;
             }
         }
-        int y = endY;
+        int y = startY; //horizontally
         for (x = startX; x < endX; x++) {
             if (board[x][y + 1] == Tileset.NOTHING) {
                 board[x][y + 1] = Tileset.WALL;
@@ -176,7 +158,7 @@ public class World {
 
     //connects 2 rooms, goes right then up
     private void connectY(int startX, int endX, int startY, int endY) {
-        int y = startY;
+        int y = startY; // horizontally
         for (int x = startX; x < endX; x++) {
             if (board[x][y + 1] == Tileset.NOTHING) {
                 board[x][y + 1] = Tileset.WALL;
@@ -188,7 +170,7 @@ public class World {
                 board[x][y - 1] = Tileset.WALL;
             }
         }
-        int x = endX;
+        int x = startX; //vertically
         for (y = startY; y < endY; y++) {
             if (board[x + 1][y] == Tileset.NOTHING) {
                 board[x + 1][y] = Tileset.WALL;
@@ -204,7 +186,7 @@ public class World {
 
     //grows all valid rooms
     private void grow_Rooms() {
-        grow_RoomsHelper();
+        grow_RoomsHelper(0);
         for (int i = rooms.size() - 1; i >= 0; i--) {
                 if (!isValidRoom(rooms.get(i))) {
                     rooms.remove(rooms.get(i));
@@ -218,22 +200,23 @@ public class World {
         }
         if (area_used < (total_area / 3)) {
             fillWithNothing(board);
-            grow_RoomsHelper();
+            grow_RoomsHelper(1);
             grow_Rooms();
         }
     }
 
     //recursively grows rooms
-    private void grow_RoomsHelper() {
+    private void grow_RoomsHelper(int count) {
         int i = createPoint();
         if (i > 0) {
             Room now = rooms.get(i);
             if (check(now)) {
                 populateRoom(now);
+                count++;
             }
         }
         if (area_used < (total_area / 3)) {
-            grow_RoomsHelper();
+            grow_RoomsHelper(count);
         }
     }
 
@@ -254,7 +237,7 @@ public class World {
         area_used = area_used + room.area();
         for (int i = room.x; i <= room.x_bound; i++) {
             for (int j = room.y; j <= room.y_bound; j++) {
-                if (i == room.x || i == room.x_bound || j == room.y || j == room.y_bound) {
+                if ((i == room.x || i == room.x_bound || j == room.y || j == room.y_bound) && board[i][j] != Tileset.FLOOR) {
                     board[i][j] = Tileset.WALL;
                 } else {
                     board[i][j] = Tileset.FLOOR;
@@ -318,6 +301,8 @@ public class World {
         public int y; //bottom left y coord
         public int x_bound; //top right x coord
         public int y_bound; //top right y coord
+        public int[] center = new int[2]; //x, y coord of center in that order
+        public HashMap<Integer, Integer> edges;
 
         //initializes a room, makes sure it fits in the board
         public Room(int x, int y) {
@@ -331,6 +316,21 @@ public class World {
             if (y_bound >= height - 1) {
                 y_bound = height - 2;
             }
+
+            center[0] = x + (x_bound - x) / 2;
+            center[1] = y + (y_bound - y) / 2;
+
+
+
+//            for (int i = x + 1; i < x_bound; i++) {
+//                topXs.add(i);
+//                botXs.add(i);
+//            }
+//
+//            for (int j = y + 1; j < y_bound; j++) {
+//                rightYs.add(j);
+//                leftYs.add(j);
+//            }
         }
 
         //area of a room
@@ -340,9 +340,10 @@ public class World {
 
         //distance between 2 rooms
         private double distance(Room room) {
-            return Math.sqrt(Math.pow((x - room.x), 2) + Math.pow((y - room.y), 2));
+            return Math.sqrt(Math.pow((center[0] - room.center[0]), 2) + Math.pow((center[1] - room.center[1]), 2));
         }
 
+        //list of rooms from closest to farthest based on the center of each
         private List<Room> closest() {
             List<Room> ret = new ArrayList<>();
             TreeMap<Double, Room> penalties = new TreeMap<>();
@@ -357,5 +358,61 @@ public class World {
             }
             return ret;
         }
+    }
+
+    public void connect(int[] center1, int[] center2) {
+        int startX = Math.min(center1[0], center2[0]);
+        int startY;
+        int endX;
+        int endY;
+        if (center1[0] == startX) {
+            endX = center2[0];
+            endY = center2[1];
+            startY = center1[1];
+        } else {
+            endX = center1[0];
+            endY= center1[1];
+            startY = center2[1];
+        }
+
+        int x = startX;
+        if (endY > startY) {
+            for (int y = startY + 1; y <= endY; y++) {
+                if (board[x + 1][y] != Tileset.FLOOR) {
+                    board[x + 1][y] = Tileset.WALL;
+                }
+                board[x][y] = Tileset.FLOOR;
+                if (board[x - 1][y] != Tileset.FLOOR) {
+                    board[x - 1][y] = Tileset.WALL;
+                }
+            }
+        } else {
+            for (int y = startY; y >= endY; y--) {
+                if (board[x + 1][y] != Tileset.FLOOR) {
+                    board[x + 1][y] = Tileset.WALL;
+                }
+                board[x][y] = Tileset.FLOOR;
+                if (board[x - 1][y] != Tileset.FLOOR) {
+                    board[x - 1][y] = Tileset.WALL;
+                }
+            }
+        }
+
+        int y = endY;
+        for (x = startX; x < endX; x++) {
+            if(board[x][y + 1] != Tileset.FLOOR) {
+                board[x][y + 1] = Tileset.WALL;
+            }
+            board[x][y] = Tileset.FLOOR;
+            if(board[x][y - 1] != Tileset.FLOOR) {
+                board[x][y - 1] = Tileset.WALL;
+            }
+        }
+
+        board[center1[0]][center1[1]] = Tileset.AVATAR;
+        board[center2[0]][center2[1]] = Tileset.CELL;
+
+        board[startX][startY] = Tileset.FLOWER;
+        board[endX][endY] = Tileset.GRASS;
     }
 }
