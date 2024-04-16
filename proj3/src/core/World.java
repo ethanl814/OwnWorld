@@ -62,15 +62,17 @@ public class World {
         growHallways();
         return board;
     }
-
-
-    private void growHallways() {
-        List<Room> ret = new ArrayList<>();
+    
+    public void validateWorld
+            
+    //grows hallways starting at a random room
+    private void growHallways() { 
         int i = RandomUtils.uniform(seed, 0, rooms.size());
         Room base = rooms.get(i);
         growHallwaysHelper(base, 0);
     }
-
+    
+    //recrusively picks which rooms to connect and fuses them
     private void growHallwaysHelper(Room curr, int iter) {
         int connectedness = 0;
         for (int i = 0; i < rooms.size(); i++) {
@@ -93,93 +95,6 @@ public class World {
                 connect(curr.center, nex.center);
                 growHallwaysHelper(nex, iter + 1);
                 break;
-            }
-        }
-    }
-
-    //connects 2 rooms in a random way
-//    private void connect(Room from, Room to) {
-//        int startX = Math.min(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound ));
-//        int startY = Math.min(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
-//        int endX = Math.max(RandomUtils.uniform(seed, from.x + 1, from.x_bound), RandomUtils.uniform(seed, to.x + 1, to.x_bound));
-//        int endY = Math.max(RandomUtils.uniform(seed, from.y + 1, from.y_bound), RandomUtils.uniform(seed, to.y + 1, to.y_bound));
-//
-//        if (to.x > from.x) {
-//            if (to.y > from.y) {
-//                connectY
-//            } else {
-//
-//            }
-//        } else {
-//            if (to.y > from.y) {
-//
-//            } else {
-//
-//            }
-//        }
-//
-//        int whichFirst = RandomUtils.uniform(seed, 0 , 2);
-//        if (whichFirst == 0) {
-//            connectY(startX, endX, startY, endY);
-//        } else {
-//            connectX(startX, endX, startY, endY);
-//        }
-//        halls.union(rooms.indexOf(from), rooms.indexOf(to));
-//    }
-
-
-    //Connects 2 rooms, goes up then right
-    private void connectX(int startX, int endX, int startY, int endY) {
-        int x = startX; //vertically
-        for (int y = startY; y < endY; y++) {
-            if (board[x + 1][y] == Tileset.NOTHING) {
-                board[x + 1][y] = Tileset.WALL;
-            }
-            if (!(x == startX && y == startY && board[x][y] == Tileset.WALL)) {
-                board[x][y] = Tileset.FLOOR;
-            }
-            if (board[x - 1][y] == Tileset.NOTHING) {
-                board[x - 1][y] = Tileset.WALL;
-            }
-        }
-        int y = startY; //horizontally
-        for (x = startX; x < endX; x++) {
-            if (board[x][y + 1] == Tileset.NOTHING) {
-                board[x][y + 1] = Tileset.WALL;
-            }
-            if (!(y == endY && x == endX && board[x][y] == Tileset.WALL)) {
-                board[x][y] = Tileset.FLOOR;
-            }
-            if (board[x][y - 1] == Tileset.NOTHING) {
-                board[x][y - 1] = Tileset.WALL;
-            }
-        }
-    }
-
-    //connects 2 rooms, goes right then up
-    private void connectY(int startX, int endX, int startY, int endY) {
-        int y = startY; // horizontally
-        for (int x = startX; x < endX; x++) {
-            if (board[x][y + 1] == Tileset.NOTHING) {
-                board[x][y + 1] = Tileset.WALL;
-            }
-            if (!(y == startY && x == startX && board[x][y] == Tileset.WALL)) {
-                board[x][y] = Tileset.FLOOR;
-            }
-            if (board[x][y - 1] == Tileset.NOTHING) {
-                board[x][y - 1] = Tileset.WALL;
-            }
-        }
-        int x = startX; //vertically
-        for (y = startY; y < endY; y++) {
-            if (board[x + 1][y] == Tileset.NOTHING) {
-                board[x + 1][y] = Tileset.WALL;
-            }
-            if (!(x == endX && y == endY && board[x][y] == Tileset.WALL)) {
-                board[x][y] = Tileset.FLOOR;
-            }
-            if (board[x - 1][y] == Tileset.NOTHING) {
-                board[x - 1][y] = Tileset.WALL;
             }
         }
     }
@@ -360,6 +275,7 @@ public class World {
         }
     }
 
+    //helper function that connects 2 rooms
     public void connect(int[] center1, int[] center2) {
         int startX = Math.min(center1[0], center2[0]);
         int startY;
