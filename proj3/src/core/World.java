@@ -7,9 +7,8 @@ import tileengine.Tileset;
 import utils.FileUtils;
 import utils.RandomUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
 import edu.princeton.cs.algs4.StdDraw;
 
 public class World {
@@ -63,6 +62,32 @@ public class World {
         return board;
     }
 
+//    private List<Room> hallTraversal () {
+//        List<Room> ret = new ArrayList<>();
+//        int i = RandomUtils.uniform(seed, 0, rooms.size());
+//        Room base = rooms.get(i);
+//        TreeMap<Double, List<Room>> penalties = new TreeMap<>();
+//        for (Room room: rooms) {
+//            List<Room> assRooms = new ArrayList<>();
+//            assRooms.add(room);
+//            if (penalties.get(base.distance(room)) == null) {
+//                penalties.put(base.distance(room), assRooms);
+//            } else {
+//                assRooms.addAll(penalties.get(base.distance(room)));
+//                penalties.put(base.distance(room), assRooms);
+//            }
+//        }
+//        List<Double> keys = new ArrayList<>(penalties.keySet());
+//        Collections.sort(keys, Collections.reverseOrder());
+//        for (Double key: keys) {
+//            List<Room> thisRooms = penalties.get(key);
+//            for (Room these: thisRooms) {
+//                ret.add(these);
+//            }
+//        }
+//        return ret;
+//    }
+
     private void growHallways() {
 //        int numHalls = RandomUtils.uniform(seed, rooms.size(), 2 * rooms.size());
 //        for (int i = 0; i < numHalls; i++) {
@@ -76,7 +101,32 @@ public class World {
 //                connect(rooms.get(index), rooms.get(index + 1));
 //            }
 //        }
-        connect(rooms.get(0), rooms.get(1));
+        List<Room> ret = new ArrayList<>();
+        int i = RandomUtils.uniform(seed, 0, rooms.size());
+        Room base = rooms.get(i);
+        growHallwaysHelper(base, 0);
+    }
+
+    private void growHallwaysHelper(Room curr, int iter) {
+        int connectedness = 0;
+        for (int i = 0; i < rooms.size(); i++) {
+            if (halls.connected(rooms.indexOf(curr), i)) {
+                connectedness++;
+            }
+        }
+        if (connectedness == rooms.size()) {
+            return;
+        }
+        for (int j = 0; j < curr.closest().size(); j++) {
+            if (iter == 3) {
+                return;
+            }
+            if (!halls.connected(rooms.indexOf(curr), rooms.indexOf(curr.closest().get(j)))) {
+                connect(curr, curr.closest().get(j));
+                growHallwaysHelper(curr.closest().get(j), iter + 1);
+                break;
+            }
+        }
     }
 
     //connects 2 rooms in a random way
@@ -291,6 +341,21 @@ public class World {
         //distance between 2 rooms
         private double distance(Room room) {
             return Math.sqrt(Math.pow((x - room.x), 2) + Math.pow((y - room.y), 2));
+        }
+
+        private List<Room> closest() {
+            List<Room> ret = new ArrayList<>();
+            TreeMap<Double, Room> penalties = new TreeMap<>();
+            for (Room room: rooms) {
+                penalties.put(distance(room), room);
+            }
+            List<Double> keys = new ArrayList<>(penalties.keySet());
+            Collections.sort(keys);
+            for (Double key: keys) {
+                ret.add(penalties.get(key));
+
+            }
+            return ret;
         }
     }
 }
