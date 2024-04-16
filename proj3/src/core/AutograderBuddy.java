@@ -20,8 +20,10 @@ public class AutograderBuddy {
      * @return the 2D TETile[][] representing the state of the world
      */
     public static TETile[][] getWorldFromInput(String input) {
-        World world = new World(parseLong(input));
-        return world.groWorld();
+        String numberStr = input.substring(1, input.length() - 1);  // Remove the first and last character
+        long number = Long.parseLong(numberStr);
+        World ret = new World(number);
+        return ret.groWorld();
 
     }
 

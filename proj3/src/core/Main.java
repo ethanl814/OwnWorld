@@ -19,7 +19,7 @@ public class Main {
     }
     public static World getWorldFromInput(String info) {
         String numberStr = info.substring(1, info.length() - 1);  // Remove the first and last character
-        int number = Integer.parseInt(numberStr);
+        long number = Long.parseLong(numberStr);
         return new World(number);
     }
 }
