@@ -287,5 +287,10 @@ public class World {
         private int area() {
             return (x_bound - x) * (y_bound - y);
         }
+
+        //distance between 2 rooms
+        private double distance(Room room) {
+            return Math.sqrt(Math.pow((x - room.x), 2) + Math.pow((y - room.y), 2));
+        }
     }
 }
