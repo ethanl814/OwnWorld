@@ -3,7 +3,6 @@ package core;
 import tileengine.TETile;
 import tileengine.Tileset;
 
-import static java.lang.Long.parseLong;
 
 public class AutograderBuddy {
 
