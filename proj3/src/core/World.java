@@ -12,12 +12,12 @@ import java.util.*;
 
 import edu.princeton.cs.algs4.StdDraw;
 
+//This is unnecessarily complicated ngl, took way to long
 public class World {
     private static final int DEFAULT_WIDTH = 50;
     private static final int DEFAULT_HEIGHT = 50;
     private TERenderer ter;
     private TETile[][] board;
-    private TETile[][] halls2;
     private Random seed;
     private int width;
     private int height;
@@ -38,32 +38,27 @@ public class World {
         board = nothingWorld;
         total_area = width * height;
         area_used = 0;
-        halls2 = new TETile[width][height];
-        fillWithNothing(halls2);
     }
 
+    //does jacks*** ethan is dumb
     public void runGame() {
         renderBoard();
     }
 
     //renders the board(for main)
     private void renderBoard() {
-//        System.out.println(halls2);
-//        ter.drawTiles(halls2);
-//        StdDraw.show();
         System.out.println(board);
         ter.drawTiles(board);
         StdDraw.show();
     }
 
+    //Lelouch VI Britannia commands you, grow, grow WORLD!
     public TETile[][] grow_World() {
         grow_Rooms();
         halls = new WeightedQuickUnionUF(rooms.size());
         growHallways();
         return board;
     }
-    
-    public void validateWorld
             
     //grows hallways starting at a random room
     private void growHallways() { 
@@ -72,7 +67,7 @@ public class World {
         growHallwaysHelper(base, 0);
     }
     
-    //recrusively picks which rooms to connect and fuses them
+    //recursively picks which rooms to connect and fuses them
     private void growHallwaysHelper(Room curr, int iter) {
         int connectedness = 0;
         for (int i = 0; i < rooms.size(); i++) {
@@ -87,9 +82,9 @@ public class World {
             Room nex = curr.closest().get(j);
             int nexIndex = rooms.indexOf(nex);
             int currIndex = rooms.indexOf(curr);
-            if (iter == 12) {
-                return;
-            }
+//            if (iter == 13) { //exists for debugging purposes
+//                return;
+//            }
             if (!halls.connected(currIndex, nexIndex)) {
                 halls.union(currIndex, nexIndex);
                 connect(curr.center, nex.center);
@@ -172,11 +167,11 @@ public class World {
         }
         if (topL != Tileset.NOTHING || topR != Tileset.NOTHING) {
             room.y_bound = room.y_bound - 1;
-            check(room);
+            return check(room);
         }
         if (botR != Tileset.NOTHING || botL != Tileset.NOTHING) {
             room.y = room.y + 1;
-            check(room);
+            return check(room);
         }
         return true;
     }
@@ -275,7 +270,7 @@ public class World {
         }
     }
 
-    //helper function that connects 2 rooms
+    //helper function that connects 2 rooms based on their center coordinates
     public void connect(int[] center1, int[] center2) {
         int startX = Math.min(center1[0], center2[0]);
         int startY;
@@ -302,6 +297,9 @@ public class World {
                     board[x - 1][y] = Tileset.WALL;
                 }
             }
+            if (board[startX - 1][endY + 1] != Tileset.FLOOR) {
+                board[startX - 1][endY + 1] = Tileset.WALL;
+            }
         } else {
             for (int y = startY; y >= endY; y--) {
                 if (board[x + 1][y] != Tileset.FLOOR) {
@@ -311,6 +309,9 @@ public class World {
                 if (board[x - 1][y] != Tileset.FLOOR) {
                     board[x - 1][y] = Tileset.WALL;
                 }
+            }
+            if (board[startX - 1][endY - 1] != Tileset.FLOOR) {
+                board[startX - 1][endY - 1] = Tileset.WALL;
             }
         }
 
@@ -325,10 +326,11 @@ public class World {
             }
         }
 
-        board[center1[0]][center1[1]] = Tileset.AVATAR;
-        board[center2[0]][center2[1]] = Tileset.CELL;
-
-        board[startX][startY] = Tileset.FLOWER;
-        board[endX][endY] = Tileset.GRASS;
+//        exists for debugging purposes:
+//        board[center1[0]][center1[1]] = Tileset.AVATAR;
+//        board[center2[0]][center2[1]] = Tileset.CELL;
+//
+//        board[startX][startY] = Tileset.FLOWER;
+//        board[endX][endY] = Tileset.GRASS;
     }
 }
