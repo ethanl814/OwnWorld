@@ -58,7 +58,22 @@ public class Avatar {
                 if (input == 'l') {
                     loadFile(SAVE_FILE);
                 }
-
+                if (input == ':') {
+                    saveFileCaller();
+                }
+            }
+            renderBoard();
+        }
+    }
+    public void saveFileCaller() {
+        while (true) {
+            while (StdDraw.hasNextKeyTyped()) {
+                char input = StdDraw.nextKeyTyped();
+                if (input != 'q') {
+                    runGame();
+                } else {
+                    saveFile();
+                }
             }
             renderBoard();
         }
