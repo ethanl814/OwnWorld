@@ -84,12 +84,12 @@ public class Avatar {
         System.out.println(x + " " + y);
         System.out.println(world);
         ter.drawTiles(world);
-//        renderAvatar();
+        //renderAvatar();
         StdDraw.show();
     }
 
     //returns the state of the world as a array
-    public TETile[][] groWorld() {
+    public TETile[][] getWorld() {
         return world;
     }
 
@@ -125,14 +125,14 @@ public class Avatar {
     //saves the current state of the world
     public void saveFile() {
         String ret = width + " " + height + " " + seedID; //saves dimensions
-        for (int y = height - 1; y >= 0; y--) { //saves curr state
+        for (int y1 = height - 1; y1 >= 0; y1--) { //saves curr state
             ret = ret + "\n";
-            for (int x = 0; x < width; x++) {
-                if (world[x][y] == Tileset.WALL) {
+            for (int x1 = 0; x1 < width; x1++) {
+                if (world[x1][y1] == Tileset.WALL) {
                     ret = ret + "#";
-                } else if (world[x][y] == Tileset.FLOOR) {
+                } else if (world[x1][y1] == Tileset.FLOOR) {
                     ret = ret + ".";
-                } else if (world[x][y] == Tileset.AVATAR) {
+                } else if (world[x1][y1] == Tileset.AVATAR) {
                     ret = ret + "@";
                 } else {
                     ret = ret + " ";
@@ -142,14 +142,14 @@ public class Avatar {
         ret = ret + "\n";
         ret = ret + "b";
 
-        for (int y = height - 1; y >= 0; y--) { //saves base
+        for (int y1 = height - 1; y1 >= 0; y1--) { //saves base
             ret = ret + "\n";
-            for (int x = 0; x < width; x++) {
-                if (base[x][y] == Tileset.WALL) {
+            for (int x1 = 0; x1 < width; x1++) {
+                if (base[x1][y1] == Tileset.WALL) {
                     ret = ret + "#";
-                } else if (base[x][y] == Tileset.FLOOR) {
+                } else if (base[x1][y1] == Tileset.FLOOR) {
                     ret = ret + ".";
-                } else if (base[x][y] == Tileset.AVATAR) {
+                } else if (base[x1][y1] == Tileset.AVATAR) {
                     ret = ret + "@";
                 } else {
                     ret = ret + " ";
@@ -169,65 +169,71 @@ public class Avatar {
         int newidth = 0;
         int newheight = 0;
         long newID = 0;
-
         In file = new In(filename);
+
+        if (!file.hasNextChar()) {
+            return this;
+        }
+
+
         if (file.hasNextLine()) {
             String[] line1 = file.readLine().split(" ");
-            if (line1.length == 0) {
-                return this;
-            }
             newidth = Integer.parseInt(line1[0]);
             newheight = Integer.parseInt(line1[1]);
             newID = Long.parseLong(line1[2]);
         }
         TETile[][] ret = new TETile[newidth][newheight];
         World.fillWithNothing(ret);
-        int y = newheight - 1;
+        int y1 = newheight - 1;
         while (file.hasNextLine()) {
             String[] line = file.readLine().split("");
-            if (line[0] == "b") {
+            if (line[0].equals("b")) {
                 break;
             }
-            for (int x = 0; x < newidth; x++) {
-                if (line[x] == "#") {
-                    ret[x][y] = Tileset.WALL;
-                } else if (line[x] == ".") {
-                    ret[x][y] = Tileset.FLOOR;
-                } else if (line[x] == "@") {
-                    ret[x][y] = Tileset.AVATAR;
-                    aX = x;
-                    aY = y;
+            for (int x1 = 0; x1 < newidth; x1++) {
+                if (line[x1].equals("#")) {
+                    ret[x1][y1] = Tileset.WALL;
+                } else if (line[x1].equals(".")) {
+                    ret[x1][y1] = Tileset.FLOOR;
+                } else if (line[x1].equals("@")) {
+                    ret[x1][y1] = Tileset.AVATAR;
+                    aX = x1;
+                    aY = y1;
                 }
             }
-            y--;
+            y1--;
         }
         load.add(ret);
 
 
-        TETile[][] base = new TETile[newidth][newheight];
+
+
+        TETile[][] newbase = new TETile[newidth][newheight];
         World.fillWithNothing(ret);
-        y = newheight - 1;
+        y1 = newheight - 1;
         while (file.hasNextLine()) {
             String[] line = file.readLine().split("");
-            if (line[0] == "b") {
+            if (line[0].equals("b")) {
                 break;
             }
-            for (int x = 0; x < newidth; x++) {
-                if (line[x] == "#") {
-                    base[x][y] = Tileset.WALL;
-                } else if (line[x] == ".") {
-                    base[x][y] = Tileset.FLOOR;
-                } else if (line[x] == "@") {
-                    base[x][y] = Tileset.AVATAR;
+            for (int x1 = 0; x1 < newidth; x1++) {
+                if (line[x1].equals("#")) {
+                    newbase[x1][y1] = Tileset.WALL;
+                } else if (line[x1].equals(".")) {
+                    newbase[x1][y1] = Tileset.FLOOR;
+                } else if (line[x1].equals("@")) {
+                    newbase[x1][y1] = Tileset.AVATAR;
                 }
             }
-            y--;
+            y1--;
         }
-        load.add(base);
+        load.add(newbase);
+
 
         Avatar mayberet = new Avatar(load.get(1), load.get(0), aX, aY, newID);
         return mayberet;
     }
+
 
     private TETile[][] buildBase(TETile[][] tiles) {
         int eight = tiles[0].length;

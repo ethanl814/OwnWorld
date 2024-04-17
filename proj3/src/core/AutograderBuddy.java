@@ -1,10 +1,14 @@
 package core;
 
+
 import tileengine.TETile;
 import tileengine.Tileset;
 
 
+
+
 public class AutograderBuddy {
+
 
     /**
      * Simulates a game, but doesn't render anything or call any StdDraw
@@ -19,46 +23,57 @@ public class AutograderBuddy {
      * @return the 2D TETile[][] representing the state of the world
      */
     public static TETile[][] getWorldFromInput(String input) {
+        Avatar aang;
+        String saveFile = "src/save.txt";
         boolean load = false;
         String seed = "";
         boolean seeded = false;
         String movement = "";
         boolean moving = false;
         input.toLowerCase();
-        if (input.charAt(0) == 'l') {
-//            loadS
+        char first = input.charAt(0);
+        if (first == 'n') {
+            seeded = true;
         }
         for (int i = 1; i < input.length(); i++) {
-            if (input.charAt(i) == ':' && (input.charAt(i + 1) == 'Q')) {
-//                break;
-            }
-            if (input.charAt(i) == 'L') {
-//                loadFile();
-            }
-            if (input.charAt(i) == 'N') {
-                seeded = true;
-            } else if (input.charAt(i) == 'S') {
+            //if (input.charAt(i) == ':' && (input.charAt(i + 1) == 'q')) {
+            //
+            //}
+            if (input.charAt(i) == 's') {
                 seeded = false;
                 moving = true;
-            }
-            if (seeded) {
+            } else if (seeded) {
                 seed = seed + input.charAt(i);
             } else if (moving) {
                 movement = movement + input.charAt(i);
             }
         }
-        long number = Long.parseLong(seed);
-        World ret = new World(number);
-        Avatar aang = new Avatar(ret);
+        if (seed == "") {
+            World ret = new World(1);
+            aang = new Avatar(ret);
+        } else {
+            long number = Long.parseLong(seed);
+            World ret = new World(number);
+            aang = new Avatar(ret);
+        }
+        if (first == 'l') {
+            aang = aang.loadFile(saveFile);
+        }
+
 
         for (int j = 0; j < movement.length(); j++) {
+            if (movement.charAt(j) == ':' && movement.charAt(j + 1) == 'q') {
+                aang.saveFile();
+                j++;
+            }
             aang.move(movement.charAt(j));
         }
 
-//        return aang.getWorld();
-        return ret.getWorld();
 
+        return aang.getWorld();
     }
+
+
 
 
     /**
@@ -72,6 +87,7 @@ public class AutograderBuddy {
                 || t.character() == Tileset.FLOWER.character();
     }
 
+
     /**
      * Used to tell the autograder while tiles are the walls/boundaries. Change
      * this method if you add additional tiles.
@@ -82,3 +98,4 @@ public class AutograderBuddy {
                 || t.character() == Tileset.UNLOCKED_DOOR.character();
     }
 }
+
