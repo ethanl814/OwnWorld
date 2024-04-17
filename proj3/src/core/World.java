@@ -1,9 +1,11 @@
 package core;
 
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import tileengine.TERenderer;
 import tileengine.TETile;
 import tileengine.Tileset;
+import utils.FileUtils;
 import utils.RandomUtils;
 
 import java.util.*;
@@ -23,6 +25,7 @@ public class World {
     private int areaUsed;
     private List<Room> rooms = new ArrayList<>();
     private WeightedQuickUnionUF halls;
+    private Avatar aang;
     private boolean isGameOver;
 
     public World(long seed) {
@@ -34,6 +37,11 @@ public class World {
         board = nothingWorld;
         totalArea = width * height;
         areaUsed = 0;
+        groWorld();
+    }
+
+    public TETile[][] getWorld() {
+        return board;
     }
 
     //does jacks*** ethan is dumb
@@ -51,11 +59,11 @@ public class World {
     }
 
     //Lelouch VI Britannia commands you, grow, grow WORLD!
-    public TETile[][] groWorld() {
+    //this the only funny thing you ever said -ethan
+    private void groWorld() {
         growRooms();
         halls = new WeightedQuickUnionUF(rooms.size());
         growHallways();
-        return board;
     }
             
     //grows hallways starting at a random room
@@ -81,7 +89,7 @@ public class World {
             int nexIndex = rooms.indexOf(nex);
             int currIndex = rooms.indexOf(curr);
             //if (iter == 17) { //exists for debugging purposes
-            //  return;
+            //  return;wid
             //}
             if (!halls.connected(currIndex, nexIndex)) {
                 halls.union(currIndex, nexIndex);
@@ -176,7 +184,7 @@ public class World {
     }
 
     //fills the board with nothing
-    private void fillWithNothing(TETile[][] tiles) {
+    public static void fillWithNothing(TETile[][] tiles) {
         int eight = tiles[0].length;
         int idth = tiles.length;
         for (int x = 0; x < idth; x++) {
@@ -321,5 +329,11 @@ public class World {
                 board[x][y - 1] = Tileset.WALL;
             }
         }
+    }
+
+    //returns a random floor coordinate within a room
+    public int[] spawn() {
+        int startRoom = RandomUtils.uniform(seed, 0, rooms.size());
+        return rooms.get(startRoom).center;
     }
 }

@@ -19,10 +19,44 @@ public class AutograderBuddy {
      * @return the 2D TETile[][] representing the state of the world
      */
     public static TETile[][] getWorldFromInput(String input) {
-        String numberStr = input.substring(1, input.length() - 1);  // Remove the first and last character
-        long number = Long.parseLong(numberStr);
+        boolean load = false;
+        String seed = "";
+        boolean seeded = false;
+        String movement = "";
+        boolean moving = false;
+        input.toLowerCase();
+        if (input.charAt(0) == 'l') {
+//            loadS
+        }
+        for (int i = 1; i < input.length(); i++) {
+            if (input.charAt(i) == ':' && (input.charAt(i + 1) == 'Q')) {
+//                break;
+            }
+            if (input.charAt(i) == 'L') {
+//                loadFile();
+            }
+            if (input.charAt(i) == 'N') {
+                seeded = true;
+            } else if (input.charAt(i) == 'S') {
+                seeded = false;
+                moving = true;
+            }
+            if (seeded) {
+                seed = seed + input.charAt(i);
+            } else if (moving) {
+                movement = movement + input.charAt(i);
+            }
+        }
+        long number = Long.parseLong(seed);
         World ret = new World(number);
-        return ret.groWorld();
+        Avatar aang = new Avatar(ret);
+
+        for (int j = 0; j < movement.length(); j++) {
+            aang.move(movement.charAt(j));
+        }
+
+//        return aang.getWorld();
+        return ret.getWorld();
 
     }
 

@@ -8,14 +8,19 @@ public class Main {
 
         //World fake = new World(56848903);
         //fake.groWorld();
-        //fake.runGame();
+        // fake.runGame();
 
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter valid string with format \"N#######S\"");
-        String info = scan.nextLine();
-        World world = getWorldFromInput(info);
-        world.groWorld();
-        world.runGame();
+
+        //testing screen thing
+        StartScreen start = new StartScreen();
+
+
+//        Scanner scan = new Scanner(System.in);
+//        System.out.println("Enter valid string with format \"N#######S\"");
+//        String info = scan.nextLine();
+//        World world = getWorldFromInput(info);
+//        world.groWorld();
+//        world.runGame();
     }
     public static World getWorldFromInput(String info) {
         String numberStr = info.substring(1, info.length() - 1);  // Remove the first and last character
