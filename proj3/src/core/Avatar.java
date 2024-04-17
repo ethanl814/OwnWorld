@@ -22,6 +22,7 @@ public class Avatar {
     private int y;
     private Random seed;
     private long seedID;
+    private boolean isGameOver;
     private static final String SAVE_FILE = "src/save.txt";
     public Avatar(World world) {
         this.world = world.getWorld();
@@ -46,9 +47,10 @@ public class Avatar {
         seed = new Random(this.seedID);
     }
     public void runGame() {
+        isGameOver = false; //here or constructor?
         ter = new TERenderer();
         ter.initialize(width, height);
-        while (true) {
+        while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
                 if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
@@ -66,7 +68,7 @@ public class Avatar {
         }
     }
     public void saveFileCaller() {
-        while (true) {
+        while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
                 if (input != 'q') {
@@ -124,6 +126,7 @@ public class Avatar {
 
     //saves the current state of the world
     public void saveFile() {
+        isGameOver = true;
         String ret = width + " " + height + " " + seedID; //saves dimensions
         for (int y1 = height - 1; y1 >= 0; y1--) { //saves curr state
             ret = ret + "\n";
