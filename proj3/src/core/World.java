@@ -28,8 +28,6 @@ public class World {
     public World(long seed) {
         width = DEFAULT_WIDTH;
         height = DEFAULT_HEIGHT;
-        ter = new TERenderer();
-        ter.initialize(width, height);
         this.seed = new Random(seed);
         TETile[][] nothingWorld = new TETile[width][height];
         fillWithNothing(nothingWorld);
@@ -45,6 +43,8 @@ public class World {
 
     //renders the board(for main)
     private void renderBoard() {
+        ter = new TERenderer();
+        ter.initialize(width, height);
         System.out.println(board);
         ter.drawTiles(board);
         StdDraw.show();
