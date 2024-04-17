@@ -243,15 +243,32 @@ public class World {
         //list of rooms from closest to farthest based on the center of each
         private List<Room> closest() {
             List<Room> ret = new ArrayList<>();
-            TreeMap<Double, Room> penalties = new TreeMap<>();
+            TreeMap<Double, List<Room>> penalties = new TreeMap<>();
             for (Room room: rooms) {
-                penalties.put(distance(room), room);
+                System.out.println(rooms.indexOf(room) + "First iteration");
+                //penalties.put(distance(room), room);
+                if (!rooms.contains(distance(room))) {
+                    List<Room> addy = new ArrayList<>();
+                    addy.add(room);
+                    penalties.put(distance(room), addy);
+                } else {
+                    List<Room> addi = penalties.get(distance(room));
+                    addi.add(room);
+                    penalties.put(distance(room), addi);
+                }
             }
             List<Double> keys = new ArrayList<>(penalties.keySet());
             Collections.sort(keys);
             for (Double key: keys) {
-                ret.add(penalties.get(key));
-
+                //ret.add(penalties.get(key));
+                for (Room ro : penalties.get(key)) {
+                    ret.add(ro);
+                }
+            }
+            for (Room i : ret) {
+                //System.out.println("START");
+                System.out.println(rooms.indexOf(i));
+                System.out.println(distance(i));
             }
             return ret;
         }
