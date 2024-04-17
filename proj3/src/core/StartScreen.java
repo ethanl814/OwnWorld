@@ -22,14 +22,14 @@ public class StartScreen {
         StdDraw.text(400, 350, "Load Games (L)");
         StdDraw.text(400, 300, "Quit (Q)");
         StdDraw.text(400, 200, "if you are reading this you ass at basketball");
-        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        StdDraw.text(30, 770, "look top right");
-        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-        StdDraw.text(770, 770, "look bottom right");
-        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 10));
-        StdDraw.text(770, 30, "look bottom left");
-        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-        StdDraw.text(30, 30, "good boy");
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 28));
+        StdDraw.text(80, 780, "look top right");
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 23));
+        StdDraw.text(710, 780, "look bottom right");
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        StdDraw.text(730, 20, "look bottom left");
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+        StdDraw.text(35, 15, "good boy");
         getInput();
     }
     public void getInput() {
