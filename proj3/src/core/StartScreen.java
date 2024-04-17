@@ -25,11 +25,11 @@ public class StartScreen {
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         StdDraw.text(80, 780, "look top right");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 23));
-        StdDraw.text(710, 780, "look bottom right");
+        StdDraw.text(715, 780, "look bottom right");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        StdDraw.text(730, 20, "look bottom left");
+        StdDraw.text(736, 10, "look bottom left");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-        StdDraw.text(35, 15, "good boy");
+        StdDraw.text(35, 10, "good boy");
         getInput();
     }
     public void getInput() {
