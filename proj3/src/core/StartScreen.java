@@ -36,14 +36,14 @@ public class StartScreen {
         while (true) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == 'n') {
+                if (input == 'n' || input == 'N') {
                     inputSeedScreen();
                     break;
                 }
-                if (input == 'l') {
+                if (input == 'l' || input == 'L') {
 
                 }
-                if (input == 'q') {
+                if (input == 'q' || input == 'Q') {
 
                 }
             }
@@ -61,7 +61,7 @@ public class StartScreen {
         while (true) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == 's') {
+                if (input == 's' || input == 'S') {
                     makeWorld(in);
                 }
                 if (input == '1' || input == '2' || input == '3' || input == '4' || input == '5' || input == '6' || input == '7' || input == '8' || input == '9' || input == '0') {

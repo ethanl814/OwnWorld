@@ -53,11 +53,11 @@ public class Avatar {
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
+                if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A' || input == 'S' || input == 'D') {
                     move(input);
                     ter.drawTiles(world);
                 }
-                if (input == 'l') {
+                if (input == 'l' || input == 'L') {
                     loadFile(SAVE_FILE);
                 }
                 if (input == ':') {
@@ -71,7 +71,7 @@ public class Avatar {
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input != 'q') {
+                if (input != 'q' && input != 'Q') {
                     runGame();
                 } else {
                     saveFile();
@@ -97,25 +97,25 @@ public class Avatar {
 
     //moves character in a direction
     public void move(char command) {
-        if (command == 'w') { //up
+        if (command == 'w' || command == 'W') { //up
             if (!(world[x][y + 1] == Tileset.WALL)) {
                 world[x][y + 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y + 1;
             }
-        } else if (command == 'a') { //left
+        } else if (command == 'a' || command == 'A') { //left
             if (!(world[x - 1][y] == Tileset.WALL)) {
                 world[x - 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 x = x - 1;
             }
-        } else if (command == 's') { //down
+        } else if (command == 's' || command == 'S') { //down
             if (!(world[x][y - 1] == Tileset.WALL)) {
                 world[x][y - 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y - 1;
             }
-        } else if (command == 'd') { //right
+        } else if (command == 'd' || command == 'D') { //right
             if (!(world[x + 1][y] == Tileset.WALL)) {
                 world[x + 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
