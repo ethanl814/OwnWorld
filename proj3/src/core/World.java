@@ -80,9 +80,9 @@ public class World {
             Room nex = curr.closest().get(j);
             int nexIndex = rooms.indexOf(nex);
             int currIndex = rooms.indexOf(curr);
-            if (iter == 17) { //exists for debugging purposes
-              return;
-            }
+            //if (iter == 17) { //exists for debugging purposes
+            //  return;
+            //}
             if (!halls.connected(currIndex, nexIndex)) {
                 halls.union(currIndex, nexIndex);
                 connect(curr.center, nex.center);
