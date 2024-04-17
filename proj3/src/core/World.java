@@ -245,9 +245,7 @@ public class World {
             List<Room> ret = new ArrayList<>();
             TreeMap<Double, List<Room>> penalties = new TreeMap<>();
             for (Room room: rooms) {
-                System.out.println(rooms.indexOf(room) + "First iteration");
-                //penalties.put(distance(room), room);
-                if (!rooms.contains(distance(room))) {
+                if (!penalties.containsKey(distance(room))) {
                     List<Room> addy = new ArrayList<>();
                     addy.add(room);
                     penalties.put(distance(room), addy);
@@ -260,15 +258,9 @@ public class World {
             List<Double> keys = new ArrayList<>(penalties.keySet());
             Collections.sort(keys);
             for (Double key: keys) {
-                //ret.add(penalties.get(key));
                 for (Room ro : penalties.get(key)) {
                     ret.add(ro);
                 }
-            }
-            for (Room i : ret) {
-                //System.out.println("START");
-                System.out.println(rooms.indexOf(i));
-                System.out.println(distance(i));
             }
             return ret;
         }
