@@ -2,7 +2,6 @@ package core;
 
 import tileengine.TETile;
 import tileengine.Tileset;
-import edu.princeton.cs.algs4.StdDraw;
 
 
 public class AutograderBuddy {
