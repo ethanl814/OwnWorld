@@ -106,7 +106,7 @@ public class World {
                 populateRoom(room);
             }
         }
-        if (areaUsed < (totalArea / 3)) {
+        if (areaUsed < (totalArea / 2)) {
             fillWithNothing(board);
             growRoomsHelper(1);
             growRooms();
