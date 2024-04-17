@@ -1,6 +1,7 @@
 package core;
 
 import java.util.Scanner;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class Main {
     public static void main(String[] args) {
