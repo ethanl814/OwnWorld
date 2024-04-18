@@ -104,7 +104,9 @@ public class StartScreen {
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-        StdDraw.text(400,450, "TYPE DA FILE TO LOAD");
+        StdDraw.text(400,450, "PUT IN YOUR LOAD");
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        StdDraw.text(400, 405, "(mega pause)");
         StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
         StdDraw.text(400,300, "press enter to confirm");
         String in = "";
@@ -118,11 +120,13 @@ public class StartScreen {
                 StdDraw.clear(StdDraw.BLACK);
                 StdDraw.setPenColor(StdDraw.WHITE);
                 StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-                StdDraw.text(400,450, "TYPE DA FILE TO LOAD");
+                StdDraw.text(400,450, "PUT IN YOUR LOAD");
+                StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+                StdDraw.text(400, 405, "(mega pause)");
                 StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
                 StdDraw.text(400,300, "press enter to confirm");
                 StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
-                StdDraw.text(400, 375, in);
+                StdDraw.text(400, 352, in);
             }
 //            StdDraw.pause(100); //rethan says this makes it better for gpu but might bring pauses
         }
