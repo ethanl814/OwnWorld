@@ -78,8 +78,8 @@ public class Avatar {
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A' ||
-                        input == 'S' || input == 'D') {
+                if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
+                        || input == 'S' || input == 'D') {
                     move(input);
                     ter.drawTiles(world);
                 }
