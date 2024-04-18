@@ -26,10 +26,8 @@ public class Avatar {
     private Random seed;
     private long seedID;
     private boolean isGameOver;
-    private static final String SAVE_FILE = "src/core/save.txt";
+    private static final String SAVE_FILE = "save.txt";
     public Avatar(World world) {
-        File mySaves = new File("src/core/save.txt");
-
         this.world = world.getWorld(); //builds the world
         this.base = buildBase(world.getWorld());
         height = this.world[0].length;
