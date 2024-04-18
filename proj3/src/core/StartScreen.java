@@ -105,12 +105,24 @@ public class StartScreen {
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
         StdDraw.text(400,450, "TYPE DA FILE TO LOAD");
+        StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
+        StdDraw.text(400,300, "press enter to confirm");
         String in = "";
         while (true) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
+                if (input == '\n' && in != "") {
+                    loadWorld(in);
+                }
                 in += input;
-
+                StdDraw.clear(StdDraw.BLACK);
+                StdDraw.setPenColor(StdDraw.WHITE);
+                StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
+                StdDraw.text(400,450, "TYPE DA FILE TO LOAD");
+                StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
+                StdDraw.text(400,300, "press enter to confirm");
+                StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
+                StdDraw.text(400, 375, in);
             }
 //            StdDraw.pause(100); //rethan says this makes it better for gpu but might bring pauses
         }
@@ -121,5 +133,12 @@ public class StartScreen {
         Avatar aang = new Avatar(prev);
         //world.groWorld();
         aang.runGame();
+    }
+    public void loadWorld(String in) {
+        long number = Long.parseLong(in);
+        World prev = new World(number);
+        Avatar ethan = new Avatar(prev);
+        Avatar kyoshi = ethan.loadFile(in);
+        kyoshi.runGame();
     }
 }
