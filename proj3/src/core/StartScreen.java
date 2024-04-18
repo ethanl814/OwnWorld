@@ -9,7 +9,7 @@ public class StartScreen {
     private static final int DEFAULT_WIDTH = 800;
     private static final int DEFAULT_HEIGHT = 800;
     private TERenderer ter;
-    private static final String SAVE_FILE = "src/core/save.txt";
+    private static final String SAVE_FILE = "save.txt";
     public StartScreen() {
         StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         StdDraw.setXscale(0, DEFAULT_WIDTH);

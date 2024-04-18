@@ -61,6 +61,7 @@ public class AutograderBuddy {
         for (int j = 0; j < movement.length(); j++) {
             if (movement.charAt(j) == ':' && movement.charAt(j + 1) == 'q') {
                 aang.saveFile();
+                return aang.getWorld();
             }
             aang.move(movement.charAt(j));
         }
