@@ -3,7 +3,7 @@ package core;
 import tileengine.TERenderer;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.*;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 public class StartScreen {
     private static final int DEFAULT_WIDTH = 800;
@@ -17,7 +17,7 @@ public class StartScreen {
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setFont(new Font("Brush Script MT", Font.BOLD, 80));
-        StdDraw.text(400,550, "CS61B: THE GAME");
+        StdDraw.text(400, 550, "CS61B: THE GAME");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 40));
         StdDraw.text(400, 400, "New Game (N)");
         StdDraw.text(400, 350, "Load Game (L)");
@@ -45,18 +45,17 @@ public class StartScreen {
                     loadGameScreen();
                     break;
                 }
-                if (input == 'q' || input == 'Q') {
-
-                }
+                //if (input == 'q' || input == 'Q') {
+                //}
             }
             //StdDraw.pause(100); same as below
         }
     }
-    public void inputSeedScreen(){
+    public void inputSeedScreen() {
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-        StdDraw.text(400,450, "PUT YOUR SEED IN");
+        StdDraw.text(400, 450, "PUT YOUR SEED IN");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         StdDraw.text(400, 400, "(pause)");
         String in = "";
@@ -67,15 +66,16 @@ public class StartScreen {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
                 if (input == 's' || input == 'S') {
-                    if (in != "") {
+                    if (!in.equals("")) {
                         makeWorld(in);
                     }
                 }
-                if (input == '1' || input == '2' || input == '3' || input == '4' || input == '5' || input == '6' || input == '7' || input == '8' || input == '9' || input == '0') {
+                if (input == '1' || input == '2' || input == '3' || input == '4' || input == '5' || input == '6'
+                        || input == '7' || input == '8' || input == '9' || input == '0') {
                     in += input;
                     StdDraw.clear(StdDraw.BLACK);
                     StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-                    StdDraw.text(400,450, "PUT YOUR SEED IN");
+                    StdDraw.text(400, 450, "PUT YOUR SEED IN");
                     StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
                     StdDraw.text(400, 400, "(pause)");
                     StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
@@ -88,7 +88,7 @@ public class StartScreen {
                     in = in.substring(0, in.length() - 1);
                     StdDraw.clear(StdDraw.BLACK);
                     StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-                    StdDraw.text(400,450, "PUT YOUR SEED IN");
+                    StdDraw.text(400, 450, "PUT YOUR SEED IN");
                     StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
                     StdDraw.text(400, 400, "(pause)");
                     StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
@@ -98,23 +98,23 @@ public class StartScreen {
                     StdDraw.text(400, 260, "press 's' to confirm");
                 }
             }
-//            StdDraw.pause(100); //rethan says this makes it better for gpu but might bring pauses
+            //StdDraw.pause(100); //rethan says this makes it better for gpu but might bring pauses
         }
     }
     public void loadGameScreen() {
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-        StdDraw.text(400,450, "PUT IN YOUR LOAD");
+        StdDraw.text(400, 450, "PUT IN YOUR LOAD");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         StdDraw.text(400, 405, "(mega pause)");
         StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
-        StdDraw.text(400,300, "press enter to confirm");
+        StdDraw.text(400, 300, "press enter to confirm");
         String in = "";
         while (true) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == '\n' && in != "") {
+                if (input == '\n' && !in.equals("")) {
                     loadWorld();
 
                 }
@@ -144,7 +144,7 @@ public class StartScreen {
                     StdDraw.text(400, 352, in);
                 }
             }
-//            StdDraw.pause(100); //ethan says this makes it better for gpu but might bring pauses
+            //StdDraw.pause(100); //ethan says this makes it better for gpu but might bring pauses
         }
     }
     public void makeWorld(String in) {

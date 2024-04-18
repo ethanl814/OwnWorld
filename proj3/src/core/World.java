@@ -1,11 +1,9 @@
 package core;
 
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import tileengine.TERenderer;
 import tileengine.TETile;
 import tileengine.Tileset;
-import utils.FileUtils;
 import utils.RandomUtils;
 
 import java.util.*;
@@ -347,7 +345,7 @@ public class World {
 
     public List<int[]> spawnCores() {
         List<int[]> coreLocations = new ArrayList<>();
-        int cores = RandomUtils.uniform(seed, rooms.size()/2, rooms.size() - 1);
+        int cores = RandomUtils.uniform(seed, rooms.size() / 2, rooms.size() - 1);
         for (int i = 0; i < cores; i++) {
             int[] core = new int[2];
             coreLocations.add(rooms.get(i).center);

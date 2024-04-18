@@ -36,9 +36,6 @@ public class AutograderBuddy {
             seeded = true;
         }
         for (int i = 1; i < input.length(); i++) {
-            //if (input.charAt(i) == ':' && (input.charAt(i + 1) == 'q')) {
-            //
-            //}
             if (input.charAt(i) == 's') {
                 seeded = false;
                 moving = true;
@@ -48,7 +45,7 @@ public class AutograderBuddy {
                 movement = movement + input.charAt(i);
             }
         }
-        if (seed == "") {
+        if (seed.equals("")) {
             World ret = new World(1);
             aang = new Avatar(ret);
         } else {
@@ -64,7 +61,6 @@ public class AutograderBuddy {
         for (int j = 0; j < movement.length(); j++) {
             if (movement.charAt(j) == ':' && movement.charAt(j + 1) == 'q') {
                 aang.saveFile();
-                j++;
             }
             aang.move(movement.charAt(j));
         }

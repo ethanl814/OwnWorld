@@ -9,7 +9,6 @@ import utils.FileUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -79,7 +78,8 @@ public class Avatar {
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A' || input == 'S' || input == 'D') {
+                if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
+                        || input == 'S' || input == 'D') {
                     move(input);
                     ter.drawTiles(world);
                 }
@@ -130,7 +130,7 @@ public class Avatar {
                 world[x][y + 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y + 1;
-                int[] core = new int[]{x,y};
+                int[] core = new int[]{x, y};
                 if (cores.contains(core)) {
                     cores.remove(core);
                     coresLeft--;
@@ -141,7 +141,7 @@ public class Avatar {
                 world[x - 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 x = x - 1;
-                int[] core = new int[]{x,y};
+                int[] core = new int[]{x, y};
                 if (cores.contains(core)) {
                     cores.remove(core);
                     coresLeft--;
@@ -152,7 +152,7 @@ public class Avatar {
                 world[x][y - 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y - 1;
-                int[] core = new int[]{x,y};
+                int[] core = new int[]{x, y};
                 if (cores.contains(core)) {
                     cores.remove(core);
                     coresLeft--;
@@ -163,7 +163,7 @@ public class Avatar {
                 world[x + 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 x = x + 1;
-                int[] core = new int[]{x,y};
+                int[] core = new int[]{x, y};
                 if (cores.contains(core)) {
                     cores.remove(core);
                     coresLeft--;
