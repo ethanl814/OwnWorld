@@ -8,7 +8,6 @@ import tileengine.Tileset;
 import utils.FileUtils;
 
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
