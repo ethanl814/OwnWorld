@@ -33,6 +33,7 @@ public class Avatar {
         x = startCoords[0];
         y = startCoords[1];
         this.world[x][y] = Tileset.AVATAR;
+        seedID = world.getSeedID();
         seed = new Random(seedID);
     }
 
@@ -43,6 +44,7 @@ public class Avatar {
         width = this.world.length;
         this.x = x;
         this.y = y;
+        world[x][y] = Tileset.AVATAR;
         this.seedID = seedID;
         seed = new Random(this.seedID);
     }
@@ -207,13 +209,10 @@ public class Avatar {
 
 
         TETile[][] newbase = new TETile[newidth][newheight];
-        World.fillWithNothing(ret);
+        World.fillWithNothing(newbase);
         y1 = newheight - 1;
         while (file.hasNextLine()) {
             String[] line = file.readLine().split("");
-            if (line[0].equals("b")) {
-                break;
-            }
             for (int x1 = 0; x1 < newidth; x1++) {
                 if (line[x1].equals("#")) {
                     newbase[x1][y1] = Tileset.WALL;
@@ -228,7 +227,7 @@ public class Avatar {
         load.add(newbase);
 
 
-        Avatar mayberet = new Avatar(load.get(1), load.get(0), aX, aY, newID);
+        Avatar mayberet = new Avatar(load.get(0), load.get(1), aX, aY, newID);
         return mayberet;
     }
 

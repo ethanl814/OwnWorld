@@ -25,7 +25,7 @@ public class World {
     private int areaUsed;
     private List<Room> rooms = new ArrayList<>();
     private WeightedQuickUnionUF halls;
-    private Avatar aang;
+    private long seedID;
     private boolean isGameOver;
 
     public World(long seed) {
@@ -38,8 +38,15 @@ public class World {
         totalArea = width * height;
         areaUsed = 0;
         groWorld();
+        seedID = seed;
     }
 
+    //returns seed id
+    public long getSeedID() {
+        return seedID;
+    }
+
+    //returns state of the world
     public TETile[][] getWorld() {
         return board;
     }
