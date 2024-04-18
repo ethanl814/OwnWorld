@@ -344,4 +344,14 @@ public class World {
         int startRoom = RandomUtils.uniform(seed, 0, rooms.size());
         return rooms.get(startRoom).center;
     }
+
+    public List<int[]> spawnCores() {
+        List<int[]> coreLocations = new ArrayList<>();
+        int cores = RandomUtils.uniform(seed, rooms.size()/2, rooms.size() - 1);
+        for (int i = 0; i < cores; i++) {
+            int[] core = new int[2];
+            coreLocations.add(rooms.get(i).center);
+        }
+        return coreLocations;
+    }
 }

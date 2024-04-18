@@ -118,7 +118,7 @@ public class StartScreen {
                     loadWorld();
 
                 }
-                if (input == '\b') {
+                if (input == '\b' && in.length() != 0) {
                     in = in.substring(0, in.length() - 1);
                     StdDraw.clear(StdDraw.BLACK);
                     StdDraw.setPenColor(StdDraw.WHITE);

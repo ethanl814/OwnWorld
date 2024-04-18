@@ -9,6 +9,7 @@ import utils.FileUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -20,34 +21,57 @@ public class Avatar {
     private int width;
     private int x;
     private int y;
+    private int coresLeft;
+    private List<int[]> cores;
     private Random seed;
     private long seedID;
     private boolean isGameOver;
     private static final String SAVE_FILE = "src/save.txt";
     public Avatar(World world) {
-        this.world = world.getWorld();
+        this.world = world.getWorld(); //builds the world
         this.base = buildBase(world.getWorld());
         height = this.world[0].length;
         width = this.world.length;
-        int[] startCoords = world.spawn();
+
+        cores = world.spawnCores(); //builds dungeon cores
+        buildCores();
+
+        int[] startCoords = world.spawn(); //spawns avatar
         x = startCoords[0];
         y = startCoords[1];
         this.world[x][y] = Tileset.AVATAR;
+        if (cores.contains(startCoords)) {
+            cores.remove(startCoords);
+        }
+        coresLeft = cores.size();
+
         seedID = world.getSeedID();
         seed = new Random(seedID);
     }
 
-    public Avatar(TETile[][] world, TETile[][] base, int x, int y, long seedID) {
+    private void buildCores() {
+        for (int[] core: cores) {
+            int coreX = core[0];
+            int coreY = core[1];
+            world[coreX][coreY] = Tileset.CELL;
+        }
+    }
+
+    //builds avatar when loading file
+    public Avatar(TETile[][] world, TETile[][] base, int x, int y, long seedID, List<int[]> cores, int coresLeft) {
         this.world = world;
         this.base = base;
         height = this.world[0].length;
         width = this.world.length;
         this.x = x;
         this.y = y;
-        world[x][y] = Tileset.AVATAR;
         this.seedID = seedID;
         seed = new Random(this.seedID);
+        this.cores = cores;
+        this.coresLeft = coresLeft;
     }
+
+    //allows for movement, saving, loading
     public void runGame() {
         isGameOver = false; //here or constructor?
         ter = new TERenderer();
@@ -69,6 +93,8 @@ public class Avatar {
             renderBoard();
         }
     }
+
+    //calls save file
     public void saveFileCaller() {
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
@@ -104,25 +130,49 @@ public class Avatar {
                 world[x][y + 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y + 1;
+                int[] core = new int[]{x,y};
+                if (cores.contains(core)) {
+                    cores.remove(core);
+                    coresLeft--;
+                }
             }
         } else if (command == 'a' || command == 'A') { //left
             if (!(world[x - 1][y] == Tileset.WALL)) {
                 world[x - 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 x = x - 1;
+                int[] core = new int[]{x,y};
+                if (cores.contains(core)) {
+                    cores.remove(core);
+                    coresLeft--;
+                }
             }
         } else if (command == 's' || command == 'S') { //down
             if (!(world[x][y - 1] == Tileset.WALL)) {
                 world[x][y - 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y - 1;
+                int[] core = new int[]{x,y};
+                if (cores.contains(core)) {
+                    cores.remove(core);
+                    coresLeft--;
+                }
             }
         } else if (command == 'd' || command == 'D') { //right
             if (!(world[x + 1][y] == Tileset.WALL)) {
                 world[x + 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 x = x + 1;
+                int[] core = new int[]{x,y};
+                if (cores.contains(core)) {
+                    cores.remove(core);
+                    coresLeft--;
+                }
             }
+        }
+
+        if (coresLeft == 0) {
+            isGameOver = true;
         }
     }
 
@@ -139,6 +189,8 @@ public class Avatar {
                     ret = ret + ".";
                 } else if (world[x1][y1] == Tileset.AVATAR) {
                     ret = ret + "@";
+                } else if (world[x1][y1] == Tileset.CELL) {
+                    ret = ret + "c";
                 } else {
                     ret = ret + " ";
                 }
@@ -154,8 +206,6 @@ public class Avatar {
                     ret = ret + "#";
                 } else if (base[x1][y1] == Tileset.FLOOR) {
                     ret = ret + ".";
-                } else if (base[x1][y1] == Tileset.AVATAR) {
-                    ret = ret + "@";
                 } else {
                     ret = ret + " ";
                 }
@@ -174,6 +224,8 @@ public class Avatar {
         int newidth = 0;
         int newheight = 0;
         long newID = 0;
+        List<int[]> newcores = new ArrayList<>();
+        int newCoresLeft = 0;
         In file = new In(filename);
 
         if (file.hasNextLine()) {
@@ -195,6 +247,11 @@ public class Avatar {
                     ret[x1][y1] = Tileset.WALL;
                 } else if (line[x1].equals(".")) {
                     ret[x1][y1] = Tileset.FLOOR;
+                } else if (line[x1].equals("c")) {
+                    ret[x1][y1] = Tileset.CELL;
+                    int[] core = new int[]{x1, y1};
+                    newcores.add(core);
+                    newCoresLeft++;
                 } else if (line[x1].equals("@")) {
                     ret[x1][y1] = Tileset.AVATAR;
                     aX = x1;
@@ -227,11 +284,11 @@ public class Avatar {
         load.add(newbase);
 
 
-        Avatar mayberet = new Avatar(load.get(0), load.get(1), aX, aY, newID);
+        Avatar mayberet = new Avatar(load.get(0), load.get(1), aX, aY, newID, newcores, newCoresLeft);
         return mayberet;
     }
 
-
+    //copies the TETile array
     private TETile[][] buildBase(TETile[][] tiles) {
         int eight = tiles[0].length;
         int idth = tiles.length;
