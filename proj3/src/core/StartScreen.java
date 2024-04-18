@@ -19,7 +19,7 @@ public class StartScreen {
         StdDraw.text(400,550, "CS61B: THE GAME");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 40));
         StdDraw.text(400, 400, "New Game (N)");
-        StdDraw.text(400, 350, "Load Games (L)");
+        StdDraw.text(400, 350, "Load Game (L)");
         StdDraw.text(400, 300, "Quit (Q)");
         StdDraw.text(400, 200, "if you are reading this you ass at basketball");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 28));
