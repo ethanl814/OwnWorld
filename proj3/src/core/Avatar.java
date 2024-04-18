@@ -8,6 +8,7 @@ import tileengine.Tileset;
 import utils.FileUtils;
 
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,6 +28,8 @@ public class Avatar {
     private boolean isGameOver;
     private static final String SAVE_FILE = "src/core/save.txt";
     public Avatar(World world) {
+        File mySaves = new File("src/core/save.txt");
+
         this.world = world.getWorld(); //builds the world
         this.base = buildBase(world.getWorld());
         height = this.world[0].length;
