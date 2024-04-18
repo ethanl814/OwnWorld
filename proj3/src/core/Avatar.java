@@ -25,6 +25,7 @@ public class Avatar {
     private Random seed;
     private long seedID;
     private boolean isGameOver;
+    private int theme;
     private static final String SAVE_FILE = "save.txt";
     public Avatar(World world) {
         this.world = world.getWorld(); //builds the world
@@ -48,6 +49,40 @@ public class Avatar {
         seed = new Random(seedID);
     }
 
+    //themeifies the world
+    //private TETile[][] themeify() {
+        //if (theme == 1) {
+            //return themeifyHelper(world, Tileset.GRASS, Tileset.WATER, Tileset.FLOWER, Tileset.TREE);
+        //} else if (theme == 2) {
+            //return themeifyHelper(world, Tileset.SAND, Tileset.MOUNTAIN, Tileset.GRASS, Tileset.LOCKED_DOOR);
+        //} else {
+            //return world;
+        //}
+    //}
+
+    //helps themeify the world
+    //private TETile[][] themeifyHelper(TETile[][] tiles, TETile floors, TETile walls, TETile avatar, TETile cores) {
+        //int eight = tiles[0].length;
+        //int idth = tiles.length;
+        //TETile[][] ret = new TETile[idth][eight];
+        //for (int i = 0; i < tiles.length; i++) {
+            //for (int j = 0; j < tiles[0].length; j++) {
+                //if (tiles[i][j] == Tileset.WALL) {
+                    //ret[i][j] = walls;
+                //} else if (tiles[i][j] == Tileset.FLOOR) {
+                    //ret[i][j] = floors;
+                //} else if (tiles[i][j] == Tileset.CELL) {
+                    //ret[i][j] = cores;
+                //} else if (tiles[i][j] == Tileset.AVATAR) {
+                    //ret[i][j] = avatar;
+                //}
+            //}
+        //}
+        //return ret;
+    //}
+
+
+    //places the cores on the world
     private void buildCores() {
         for (int[] core: cores) {
             int coreX = core[0];
@@ -119,7 +154,7 @@ public class Avatar {
         StdDraw.show();
     }
 
-    //returns the state of the world as a array
+    //returns the state of the world as an array
     public TETile[][] getWorld() {
         return world;
     }
