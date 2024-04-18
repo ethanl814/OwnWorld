@@ -24,7 +24,7 @@ public class AutograderBuddy {
      */
     public static TETile[][] getWorldFromInput(String input) {
         Avatar aang;
-        String saveFile = "src/save.txt";
+        String saveFile = "src/core/save.txt";
         boolean load = false;
         String seed = "";
         boolean seeded = false;

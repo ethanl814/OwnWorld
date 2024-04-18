@@ -25,7 +25,7 @@ public class Avatar {
     private Random seed;
     private long seedID;
     private boolean isGameOver;
-    private static final String SAVE_FILE = "src/save.txt";
+    private static final String SAVE_FILE = "src/core/save.txt";
     public Avatar(World world) {
         this.world = world.getWorld(); //builds the world
         this.base = buildBase(world.getWorld());
@@ -78,8 +78,8 @@ public class Avatar {
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
-                        || input == 'S' || input == 'D') {
+                if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A' ||
+                        input == 'S' || input == 'D') {
                     move(input);
                     ter.drawTiles(world);
                 }
@@ -103,6 +103,7 @@ public class Avatar {
                     runGame();
                 } else {
                     saveFile();
+                    System.exit(0);
                 }
             }
             renderBoard();
