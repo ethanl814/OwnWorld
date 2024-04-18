@@ -165,7 +165,7 @@ public class Avatar {
     }
 
     //returns a list with elem 0 being the base world and elem 1 being the current state
-    public Avatar loadFile(String filename) {
+    public static Avatar loadFile(String filename) {
         List<TETile[][]> load = new ArrayList<>();
         int aX = 0;
         int aY = 0;
@@ -173,11 +173,6 @@ public class Avatar {
         int newheight = 0;
         long newID = 0;
         In file = new In(filename);
-
-        if (!file.hasNextChar()) {
-            return this;
-        }
-
 
         if (file.hasNextLine()) {
             String[] line1 = file.readLine().split(" ");

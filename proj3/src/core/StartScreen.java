@@ -9,6 +9,7 @@ public class StartScreen {
     private static final int DEFAULT_WIDTH = 800;
     private static final int DEFAULT_HEIGHT = 800;
     private TERenderer ter;
+    private static final String SAVE_FILE = "src/save.txt";
     public StartScreen() {
         StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         StdDraw.setXscale(0, DEFAULT_WIDTH);
@@ -114,7 +115,8 @@ public class StartScreen {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
                 if (input == '\n' && in != "") {
-                    loadWorld(in);
+                    loadWorld();
+
                 }
                 in += input;
                 StdDraw.clear(StdDraw.BLACK);
@@ -138,11 +140,8 @@ public class StartScreen {
         //world.groWorld();
         aang.runGame();
     }
-    public void loadWorld(String in) {
-        long number = Long.parseLong(in);
-        World prev = new World(number);
-        Avatar ethan = new Avatar(prev);
-        Avatar kyoshi = ethan.loadFile(in);
+    public void loadWorld() {
+        Avatar kyoshi = Avatar.loadFile(SAVE_FILE);
         kyoshi.runGame();
     }
 }
