@@ -41,7 +41,8 @@ public class StartScreen {
                     break;
                 }
                 if (input == 'l' || input == 'L') {
-
+                    loadGameScreen();
+                    break;
                 }
                 if (input == 'q' || input == 'Q') {
 
@@ -58,11 +59,16 @@ public class StartScreen {
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         StdDraw.text(400, 400, "(pause)");
         String in = "";
+        StdDraw.setFont(new Font("Times New Roman", Font.ITALIC, 35));
+        StdDraw.text(400, 300, "type a number");
+        StdDraw.text(400, 260, "press 's' to confirm");
         while (true) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
                 if (input == 's' || input == 'S') {
-                    makeWorld(in);
+                    if (in != "") {
+                        makeWorld(in);
+                    }
                 }
                 if (input == '1' || input == '2' || input == '3' || input == '4' || input == '5' || input == '6' || input == '7' || input == '8' || input == '9' || input == '0') {
                     in += input;
@@ -73,7 +79,38 @@ public class StartScreen {
                     StdDraw.text(400, 400, "(pause)");
                     StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
                     StdDraw.text(400, 350, in);
+                    StdDraw.setFont(new Font("Times New Roman", Font.ITALIC, 35));
+                    StdDraw.text(400, 300, "type a number");
+                    StdDraw.text(400, 260, "press 's' to confirm");
                 }
+                if (input == '\b') {
+                    in = in.substring(0, in.length() - 1);
+                    StdDraw.clear(StdDraw.BLACK);
+                    StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
+                    StdDraw.text(400,450, "PUT YOUR SEED IN");
+                    StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+                    StdDraw.text(400, 400, "(pause)");
+                    StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
+                    StdDraw.text(400, 350, in);
+                    StdDraw.setFont(new Font("Times New Roman", Font.ITALIC, 35));
+                    StdDraw.text(400, 300, "type a number");
+                    StdDraw.text(400, 260, "press 's' to confirm");
+                }
+            }
+//            StdDraw.pause(100); //rethan says this makes it better for gpu but might bring pauses
+        }
+    }
+    public void loadGameScreen() {
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
+        StdDraw.text(400,450, "TYPE DA FILE TO LOAD");
+        String in = "";
+        while (true) {
+            while (StdDraw.hasNextKeyTyped()) {
+                char input = StdDraw.nextKeyTyped();
+                in += input;
+
             }
 //            StdDraw.pause(100); //rethan says this makes it better for gpu but might bring pauses
         }
