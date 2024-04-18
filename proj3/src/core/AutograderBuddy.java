@@ -34,6 +34,8 @@ public class AutograderBuddy {
         char first = input.charAt(0);
         if (first == 'n') {
             seeded = true;
+        } else {
+            moving = true;
         }
         for (int i = 1; i < input.length(); i++) {
             if (input.charAt(i) == 's') {
