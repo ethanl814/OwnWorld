@@ -6,7 +6,6 @@ import tileengine.TERenderer;
 import tileengine.TETile;
 import tileengine.Tileset;
 import utils.FileUtils;
-import utils.RandomUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -61,17 +60,23 @@ public class Avatar {
 
     //themeifies the world
     private TETile[][] themeify() {
-        if (theme == 1) {
-            return themeifyHelper(world, Tileset.GRASS, Tileset.WATER, Tileset.CELL, Tileset.FLOWER);
-        } else if (theme == 2) {
-            return themeifyHelper(world, Tileset.SAND, Tileset.MOUNTAIN, Tileset.RED_CELL, Tileset.TREE);
+        TETile[][] tiles = new TETile[width][height];
+        if (sight) {
+            tiles = world;
         } else {
-            return world;
+            tiles = vision();
+        }
+        if (theme == 1) {
+            return themeifyHelper(tiles, Tileset.GRASS, Tileset.WATER, Tileset.CELL, Tileset.FLOWER);
+        } else if (theme == 2) {
+            return themeifyHelper(tiles, Tileset.SAND, Tileset.MOUNTAIN, Tileset.RED_CELL, Tileset.TREE);
+        } else {
+            return tiles;
         }
     }
-w
+
     //helps themeify the world
-    private TETile[][] themeifyHelper(TETile[][] tiles, TETile floors, TETile walls, TETile avatar, TETile cores) {
+    private TETile[][] themeifyHelper(TETile[][] tiles, TETile floors, TETile walls, TETile avatar, TETile cres) {
         int eight = tiles[0].length;
         int idth = tiles.length;
         TETile[][] ret = new TETile[idth][eight];
@@ -83,7 +88,7 @@ w
                 } else if (tiles[i][j] == Tileset.FLOOR) {
                     ret[i][j] = floors;
                 } else if (tiles[i][j] == Tileset.CELL) {
-                    ret[i][j] = cores;
+                    ret[i][j] = cres;
                 } else if (tiles[i][j] == Tileset.AVATAR) {
                     ret[i][j] = avatar;
                 }
@@ -103,14 +108,14 @@ w
     }
 
     //builds avatar when loading file
-    public Avatar(TETile[][] world, TETile[][] base, int x, int y, long seedID, List<int[]> cores, int coresLeft,
+    public Avatar(TETile[][] world, TETile[][] base, int[] coords, long seedID, List<int[]> cores, int coresLeft,
                   boolean newsight, int newtheme) {
         this.world = world;
         this.base = base;
         height = this.world[0].length;
         width = this.world.length;
-        this.x = x;
-        this.y = y;
+        this.x = coords[0];
+        this.y = coords[1];
         this.cores = cores;
         this.coresLeft = coresLeft;
         screen = new StartScreen();
@@ -130,15 +135,11 @@ w
                 if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
                         || input == 'S' || input == 'D') {
                     move(input);
-                    if (!sight) {
-                        ter.drawTiles(vision());
-                    } else {
-                        ter.drawTiles(getWorld());
-                    }
+                    ter.drawTiles(getWorld());
                 }
                 if (input == 'o' || input == 'O') {
                     sight = !sight;
-                    ter.drawTiles(vision());
+                    ter.drawTiles(getWorld());
                 }
                 if (input == 'l' || input == 'L') {
                     loadFile(SAVE_FILE);
@@ -148,9 +149,6 @@ w
                 }
                 if (input == 't' || input == 'T') {
                     screen.themeScreen();
-                }
-                if (coresLeft == 0) {
-                    //encounter here
                 }
             }
             renderBoard();
@@ -196,48 +194,38 @@ w
 
     //renders the board(for main)
     private void renderBoard() {
-//        System.out.println(x + " " + y);
-//        System.out.println(getWorld());
         StdDraw.clear(StdDraw.BLACK);
-        hud();
-        if (sight) {
-            ter.drawTiles(getWorld());
-        } else {
-            ter.drawTiles(vision());
-        }
+        screen.hud();
+        ter.drawTiles(getWorld());
         //renderAvatar();
         StdDraw.show();
     }
-    public void hud() {
-        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        StdDraw.setPenColor(Color.white);
-        StdDraw.text(6, 51, "press 't' to change theme");
-        StdDraw.setPenColor(Color.RED);
-        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        StdDraw.text(16, 51, "cores left: " + cores.size());
-        StdDraw.setPenColor(Color.green);
-        StdDraw.text(26, 51, "current theme: " + getTheme());
-        StdDraw.setPenColor(Color.orange);
-        StdDraw.text(34, 51, "seed: " + seedID);
-        StdDraw.setPenColor(Color.magenta);
-        StdDraw.text(44, 51, "press 'o' to toggle sight");
-    }
+
     public String getTheme() {
         if (theme == 1) {
             return "forest";
-        } if (theme == 2) {
+        }
+        if (theme == 2) {
             return "desert";
         }
         return "default";
     }
-    private void checkBoard(int x, int y) {
+    private void checkBoard(int x1, int y1) {
         for (int[] core: cores) {
-            if (core[0] == x && core[1] == y) {
+            if (core[0] == x1 && core[1] == y1) {
                 cores.remove(core);
                 coresLeft--;
                 return;
             }
         }
+    }
+
+    public int getCoresLeft() {
+        return coresLeft;
+    }
+
+    public long getID() {
+        return seedID;
     }
 
     //returns the state of the world as an array
@@ -332,6 +320,7 @@ w
         long newID = 0;
         boolean newsight = false;
         int newtheme = 0;
+        int[] coords;
         List<int[]> newcores = new ArrayList<>();
         int newCoresLeft = 0;
         In file = new In(filename);
@@ -393,8 +382,9 @@ w
         }
         load.add(newbase);
 
-
-        Avatar mayberet = new Avatar(load.get(0), load.get(1), aX, aY, newID, newcores, newCoresLeft, newsight, newtheme);
+        coords = new int[]{aX, aY};
+        Avatar mayberet = new Avatar(load.get(0), load.get(1), coords, newID, newcores,
+                newCoresLeft, newsight, newtheme);
         return mayberet;
     }
 

@@ -47,8 +47,9 @@ public class StartScreen {
                     loadGameScreen();
                     break;
                 }
-                //if (input == 'q' || input == 'Q') {
-                //}
+                if (input == 'q' || input == 'Q') {
+                    System.exit(0);
+                }
             }
             //StdDraw.pause(100); same as below
         }
@@ -210,6 +211,21 @@ public class StartScreen {
         Avatar kyoshi = Avatar.loadFile(SAVE_FILE);
         aang = kyoshi;
         kyoshi.runGame();
+    }
+
+    public void hud() {
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        StdDraw.setPenColor(Color.white);
+        StdDraw.text(6, 51, "press 't' to change theme");
+        StdDraw.setPenColor(Color.RED);
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        StdDraw.text(16, 51, "cores left: " + aang.getCoresLeft());
+        StdDraw.setPenColor(Color.green);
+        StdDraw.text(26, 51, "current theme: " + aang.getTheme());
+        StdDraw.setPenColor(Color.orange);
+        StdDraw.text(34, 51, "seed: " + aang.getID());
+        StdDraw.setPenColor(Color.magenta);
+        StdDraw.text(44, 51, "press 'o' to toggle sight");
     }
 
 }
