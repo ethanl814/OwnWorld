@@ -173,6 +173,16 @@ public class Avatar {
         StdDraw.text(20, 51, "cores left: " + cores.size());
     }
 
+    private void checkBoard(int x, int y) {
+        for (int[] core: cores) {
+            if (core[0] == x && core[1] == y) {
+                cores.remove(core);
+                coresLeft--;
+                return;
+            }
+        }
+    }
+
     //returns the state of the world as an array
     public TETile[][] getWorld() {
         return themeify();
@@ -185,44 +195,28 @@ public class Avatar {
                 world[x][y + 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y + 1;
-                int[] core = new int[]{x, y};
-                if (cores.contains(core)) {
-                    cores.remove(core);
-                    coresLeft--;
-                }
+                checkBoard(x, y);
             }
         } else if (command == 'a' || command == 'A') { //left
             if (!(world[x - 1][y] == Tileset.WALL)) {
                 world[x - 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 x = x - 1;
-                int[] core = new int[]{x, y};
-                if (cores.contains(core)) {
-                    cores.remove(core);
-                    coresLeft--;
-                }
+                checkBoard(x, y);
             }
         } else if (command == 's' || command == 'S') { //down
             if (!(world[x][y - 1] == Tileset.WALL)) {
                 world[x][y - 1] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 y = y - 1;
-                int[] core = new int[]{x, y};
-                if (cores.contains(core)) {
-                    cores.remove(core);
-                    coresLeft--;
-                }
+                checkBoard(x, y);
             }
         } else if (command == 'd' || command == 'D') { //right
             if (!(world[x + 1][y] == Tileset.WALL)) {
                 world[x + 1][y] = Tileset.AVATAR;
                 world[x][y] = base[x][y];
                 x = x + 1;
-                int[] core = new int[]{x, y};
-                if (cores.contains(core)) {
-                    cores.remove(core);
-                    coresLeft--;
-                }
+                checkBoard(x, y);
             }
         }
 
