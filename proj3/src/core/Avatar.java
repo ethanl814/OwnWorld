@@ -32,6 +32,7 @@ public class Avatar {
         this.base = buildBase(world.getWorld());
         height = this.world[0].length;
         width = this.world.length;
+        isGameOver = false;
 
         cores = world.spawnCores(); //builds dungeon cores
         buildCores();
@@ -50,36 +51,37 @@ public class Avatar {
     }
 
     //themeifies the world
-    //private TETile[][] themeify() {
-        //if (theme == 1) {
-            //return themeifyHelper(world, Tileset.GRASS, Tileset.WATER, Tileset.FLOWER, Tileset.TREE);
-        //} else if (theme == 2) {
-            //return themeifyHelper(world, Tileset.SAND, Tileset.MOUNTAIN, Tileset.GRASS, Tileset.LOCKED_DOOR);
-        //} else {
-            //return world;
-        //}
-    //}
+    private TETile[][] themeify() {
+        if (theme == 1) {
+            return themeifyHelper(world, Tileset.GRASS, Tileset.WATER, Tileset.CELL, Tileset.FLOWER);
+        } else if (theme == 2) {
+            return themeifyHelper(world, Tileset.SAND, Tileset.MOUNTAIN, Tileset.RED_CELL, Tileset.AVATAR);
+        } else {
+            return world;
+        }
+    }
 
     //helps themeify the world
-    //private TETile[][] themeifyHelper(TETile[][] tiles, TETile floors, TETile walls, TETile avatar, TETile cores) {
-        //int eight = tiles[0].length;
-        //int idth = tiles.length;
-        //TETile[][] ret = new TETile[idth][eight];
-        //for (int i = 0; i < tiles.length; i++) {
-            //for (int j = 0; j < tiles[0].length; j++) {
-                //if (tiles[i][j] == Tileset.WALL) {
-                    //ret[i][j] = walls;
-                //} else if (tiles[i][j] == Tileset.FLOOR) {
-                    //ret[i][j] = floors;
-                //} else if (tiles[i][j] == Tileset.CELL) {
-                    //ret[i][j] = cores;
-                //} else if (tiles[i][j] == Tileset.AVATAR) {
-                    //ret[i][j] = avatar;
-                //}
-            //}
-        //}
-        //return ret;
-    //}
+    private TETile[][] themeifyHelper(TETile[][] tiles, TETile floors, TETile walls, TETile avatar, TETile cores) {
+        int eight = tiles[0].length;
+        int idth = tiles.length;
+        TETile[][] ret = new TETile[idth][eight];
+        World.fillWithNothing(ret);
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                if (tiles[i][j] == Tileset.WALL) {
+                    ret[i][j] = walls;
+                } else if (tiles[i][j] == Tileset.FLOOR) {
+                    ret[i][j] = floors;
+                } else if (tiles[i][j] == Tileset.CELL) {
+                    ret[i][j] = cores;
+                } else if (tiles[i][j] == Tileset.AVATAR) {
+                    ret[i][j] = avatar;
+                }
+            }
+        }
+        return ret;
+    }
 
 
     //places the cores on the world
@@ -107,7 +109,6 @@ public class Avatar {
 
     //allows for movement, saving, loading
     public void runGame() {
-        isGameOver = false; //here or constructor?
         ter = new TERenderer();
         ter.initialize(width, height);
         while (!isGameOver) {
@@ -116,7 +117,7 @@ public class Avatar {
                 if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
                         || input == 'S' || input == 'D') {
                     move(input);
-                    ter.drawTiles(world);
+                    ter.drawTiles(getWorld());
                 }
                 if (input == 'l' || input == 'L') {
                     loadFile(SAVE_FILE);
@@ -148,15 +149,15 @@ public class Avatar {
     //renders the board(for main)
     private void renderBoard() {
         System.out.println(x + " " + y);
-        System.out.println(world);
-        ter.drawTiles(world);
+        System.out.println(getWorld());
+        ter.drawTiles(getWorld());
         //renderAvatar();
         StdDraw.show();
     }
 
     //returns the state of the world as an array
     public TETile[][] getWorld() {
-        return world;
+        return themeify();
     }
 
     //moves character in a direction
