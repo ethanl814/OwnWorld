@@ -132,6 +132,7 @@ public class Avatar {
             }
             renderBoard();
         }
+        screen.gameOverScreen();
     }
     public static void changeTheme(char input) {
         theme = Character.getNumericValue(input);
@@ -171,7 +172,7 @@ public class Avatar {
         StdDraw.text(10, 51, "press 't' to change theme");
         StdDraw.setPenColor(Color.RED);
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        StdDraw.text(20, 51, "cores left: " + cores.size());
+        StdDraw.text(21, 51, "cores left: " + cores.size());
         StdDraw.setPenColor(Color.green);
         StdDraw.text(31, 51, "current theme: " + getTheme());
         StdDraw.setPenColor(Color.orange);

@@ -120,30 +120,6 @@ public class StartScreen {
                 if (input == '\n') {
                     loadWorld();
                 }
-//                if (input == '\b' && in.length() != 0) {
-//                    in = in.substring(0, in.length() - 1);
-//                    StdDraw.clear(StdDraw.BLACK);
-//                    StdDraw.setPenColor(StdDraw.WHITE);
-//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-//                    StdDraw.text(400, 450, "PUT IN YOUR LOAD");
-//                    StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-//                    StdDraw.text(400, 405, "(mega pause)");
-//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
-//                    StdDraw.text(400, 300, "press enter to confirm");
-//                    StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
-//                    StdDraw.text(400, 352, in);
-//                } else {
-//                    in += input;
-//                    StdDraw.clear(StdDraw.BLACK);
-//                    StdDraw.setPenColor(StdDraw.WHITE);
-//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-//                    StdDraw.text(400, 450, "PUT IN YOUR LOAD");
-//                    StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-//                    StdDraw.text(400, 405, "(mega pause)");
-//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
-//                    StdDraw.text(400, 300, "press enter to confirm");
-//                    StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
-//                    StdDraw.text(400, 352, in);
             }
             //StdDraw.pause(100); //ethan says this makes it better for gpu but might bring pauses
         }
@@ -174,6 +150,17 @@ public class StartScreen {
         ter.initialize(aang.getWorld().length, aang.getWorld()[0].length + 2);
         ter.drawTiles(aang.getWorld());
         aang.runGame();//aang.runGame();
+    }
+    public void gameOverScreen() {
+        StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        StdDraw.setXscale(0, DEFAULT_WIDTH);
+        StdDraw.setYscale(0, DEFAULT_HEIGHT);
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 120));
+        StdDraw.text(400, 550, "GAME OVER");
+        StdDraw.text(400, 500, "YOU HAVE BEAT THE");
+        if (aang.getTheme() == )
     }
 
     public void makeWorld(String in) {
