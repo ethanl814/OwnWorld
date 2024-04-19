@@ -22,17 +22,18 @@ public class Avatar {
     private int y;
     private int coresLeft;
     private List<int[]> cores;
-    private Random seed;
     private long seedID;
     private boolean isGameOver;
-    private int theme;
+    private static int theme;
     private static final String SAVE_FILE = "save.txt";
+    private StartScreen screen;
     public Avatar(World world) {
         this.world = world.getWorld(); //builds the world
         this.base = buildBase(world.getWorld());
         height = this.world[0].length;
         width = this.world.length;
         isGameOver = false;
+        theme = 0;
 
         cores = world.spawnCores(); //builds dungeon cores
         buildCores();
@@ -47,7 +48,7 @@ public class Avatar {
         coresLeft = cores.size();
 
         seedID = world.getSeedID();
-        seed = new Random(seedID);
+        screen = new StartScreen();
     }
 
     //themeifies the world
@@ -101,19 +102,19 @@ public class Avatar {
         width = this.world.length;
         this.x = x;
         this.y = y;
-        this.seedID = seedID;
-        seed = new Random(this.seedID);
         this.cores = cores;
         this.coresLeft = coresLeft;
+        screen = new StartScreen();
     }
 
     //allows for movement, saving, loading
     public void runGame() {
         ter = new TERenderer();
-        ter.initialize(width, height);
+        ter.initialize(width, height + 2);
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
+                renderBoard();
                 if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
                         || input == 'S' || input == 'D') {
                     move(input);
@@ -125,10 +126,17 @@ public class Avatar {
                 if (input == ':') {
                     saveFileCaller();
                 }
+                if (input == 't' || input == 'T') {
+                    screen.themeScreen();
+                }
             }
             renderBoard();
         }
     }
+    public static void changeTheme(char input) {
+        theme = Character.getNumericValue(input);
+    }
+
 
     //calls save file
     public void saveFileCaller() {
@@ -148,11 +156,21 @@ public class Avatar {
 
     //renders the board(for main)
     private void renderBoard() {
-        System.out.println(x + " " + y);
-        System.out.println(getWorld());
+//        System.out.println(x + " " + y);
+//        System.out.println(getWorld());
+        hud();
+        System.out.println(coresLeft);
         ter.drawTiles(getWorld());
         //renderAvatar();
         StdDraw.show();
+    }
+    public void hud() {
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        StdDraw.setPenColor(Color.white);
+        StdDraw.text(10, 51, "press 't' to change theme");
+        StdDraw.setPenColor(Color.RED);
+        StdDraw.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        StdDraw.text(20, 51, "cores left: " + cores.size());
     }
 
     //returns the state of the world as an array

@@ -13,6 +13,7 @@ public class Main {
 
         //testing screen thing
         StartScreen start = new StartScreen();
+        start.realStartScreen();
 
 
         //Scanner scan = new Scanner(System.in);

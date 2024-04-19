@@ -9,8 +9,10 @@ public class StartScreen {
     private static final int DEFAULT_WIDTH = 800;
     private static final int DEFAULT_HEIGHT = 800;
     private TERenderer ter;
+    private static Avatar aang;
     private static final String SAVE_FILE = "save.txt";
-    public StartScreen() {
+    public StartScreen() {}
+    public void realStartScreen() {
         StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         StdDraw.setXscale(0, DEFAULT_WIDTH);
         StdDraw.setYscale(0, DEFAULT_HEIGHT);
@@ -66,6 +68,7 @@ public class StartScreen {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
                 if (input == 's' || input == 'S') {
+                    //themeScreen();
                     if (!in.equals("")) {
                         makeWorld(in);
                     }
@@ -147,15 +150,45 @@ public class StartScreen {
             //StdDraw.pause(100); //ethan says this makes it better for gpu but might bring pauses
         }
     }
+    public void themeScreen() {
+        StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        StdDraw.setXscale(0, DEFAULT_WIDTH);
+        StdDraw.setYscale(0, DEFAULT_HEIGHT);
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.setFont(new Font("Brush Script MT", Font.BOLD, 80));
+        StdDraw.text(400, 550, "CHANGE DA THEME");
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+        StdDraw.text(400, 400, "Press 1 for Forest");
+        StdDraw.text(400, 350, "Press 2 for Desert");
+        StdDraw.text(400, 300, "Press 3 for Default");
+        StdDraw.show();
+        boolean run = true;
+        while (run) {
+            while (StdDraw.hasNextKeyTyped()) {
+                Avatar.changeTheme(StdDraw.nextKeyTyped());
+                run = false;
+            }
+        }
+        aang.saveFile();
+        Avatar roku = Avatar.loadFile(SAVE_FILE);
+        ter = new TERenderer();
+        ter.initialize(roku.getWorld().length, roku.getWorld()[0].length + 2);
+        ter.drawTiles(roku.getWorld());
+        roku.runGame();//aang.runGame();
+    }
+
     public void makeWorld(String in) {
         long number = Long.parseLong(in);
         World prev = new World(number);
-        Avatar aang = new Avatar(prev);
+        aang = new Avatar(prev);
         //world.groWorld();
         aang.runGame();
     }
     public void loadWorld() {
         Avatar kyoshi = Avatar.loadFile(SAVE_FILE);
+        aang = kyoshi;
         kyoshi.runGame();
     }
+
 }
