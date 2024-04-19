@@ -105,6 +105,7 @@ public class Avatar {
         this.cores = cores;
         this.coresLeft = coresLeft;
         screen = new StartScreen();
+        this.seedID = seedID;
     }
 
     //allows for movement, saving, loading
@@ -114,7 +115,6 @@ public class Avatar {
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                renderBoard();
                 if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
                         || input == 'S' || input == 'D') {
                     move(input);
@@ -158,8 +158,9 @@ public class Avatar {
     private void renderBoard() {
 //        System.out.println(x + " " + y);
 //        System.out.println(getWorld());
+        StdDraw.clear(StdDraw.BLACK);
         hud();
-        System.out.println(coresLeft);
+        System.out.println(seedID);
         ter.drawTiles(getWorld());
         //renderAvatar();
         StdDraw.show();
@@ -169,10 +170,21 @@ public class Avatar {
         StdDraw.setPenColor(Color.white);
         StdDraw.text(10, 51, "press 't' to change theme");
         StdDraw.setPenColor(Color.RED);
-        StdDraw.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         StdDraw.text(20, 51, "cores left: " + cores.size());
+        StdDraw.setPenColor(Color.green);
+        StdDraw.text(31, 51, "current theme: " + getTheme());
+        StdDraw.setPenColor(Color.orange);
+        StdDraw.text(40, 51, "seed: " + seedID);
     }
-
+    public String getTheme() {
+        if (theme == 1) {
+            return "forest";
+        } if (theme == 2) {
+            return "desert";
+        }
+        return "default";
+    }
     private void checkBoard(int x, int y) {
         for (int[] core: cores) {
             if (core[0] == x && core[1] == y) {
@@ -226,7 +238,7 @@ public class Avatar {
     }
 
     //saves the current state of the world
-    public void saveFile() {
+    public Avatar saveFile() {
         isGameOver = true;
         String ret = width + " " + height + " " + seedID; //saves dimensions
         for (int y1 = height - 1; y1 >= 0; y1--) { //saves curr state
@@ -263,6 +275,7 @@ public class Avatar {
         ret = ret + "\n";
 
         FileUtils.writeFile(SAVE_FILE, ret);
+        return this;
     }
 
     //returns a list with elem 0 being the base world and elem 1 being the current state

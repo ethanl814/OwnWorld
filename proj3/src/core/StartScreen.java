@@ -117,35 +117,33 @@ public class StartScreen {
         while (true) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
-                if (input == '\n' && !in.equals("")) {
+                if (input == '\n') {
                     loadWorld();
-
                 }
-                if (input == '\b' && in.length() != 0) {
-                    in = in.substring(0, in.length() - 1);
-                    StdDraw.clear(StdDraw.BLACK);
-                    StdDraw.setPenColor(StdDraw.WHITE);
-                    StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-                    StdDraw.text(400, 450, "PUT IN YOUR LOAD");
-                    StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-                    StdDraw.text(400, 405, "(mega pause)");
-                    StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
-                    StdDraw.text(400, 300, "press enter to confirm");
-                    StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
-                    StdDraw.text(400, 352, in);
-                } else {
-                    in += input;
-                    StdDraw.clear(StdDraw.BLACK);
-                    StdDraw.setPenColor(StdDraw.WHITE);
-                    StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
-                    StdDraw.text(400, 450, "PUT IN YOUR LOAD");
-                    StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-                    StdDraw.text(400, 405, "(mega pause)");
-                    StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
-                    StdDraw.text(400, 300, "press enter to confirm");
-                    StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
-                    StdDraw.text(400, 352, in);
-                }
+//                if (input == '\b' && in.length() != 0) {
+//                    in = in.substring(0, in.length() - 1);
+//                    StdDraw.clear(StdDraw.BLACK);
+//                    StdDraw.setPenColor(StdDraw.WHITE);
+//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
+//                    StdDraw.text(400, 450, "PUT IN YOUR LOAD");
+//                    StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+//                    StdDraw.text(400, 405, "(mega pause)");
+//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
+//                    StdDraw.text(400, 300, "press enter to confirm");
+//                    StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
+//                    StdDraw.text(400, 352, in);
+//                } else {
+//                    in += input;
+//                    StdDraw.clear(StdDraw.BLACK);
+//                    StdDraw.setPenColor(StdDraw.WHITE);
+//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 60));
+//                    StdDraw.text(400, 450, "PUT IN YOUR LOAD");
+//                    StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+//                    StdDraw.text(400, 405, "(mega pause)");
+//                    StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
+//                    StdDraw.text(400, 300, "press enter to confirm");
+//                    StdDraw.setFont(new Font("Arial", Font.PLAIN, 40));
+//                    StdDraw.text(400, 352, in);
             }
             //StdDraw.pause(100); //ethan says this makes it better for gpu but might bring pauses
         }
@@ -170,7 +168,7 @@ public class StartScreen {
                 run = false;
             }
         }
-        aang.saveFile();
+        aang = aang.saveFile();
         Avatar roku = Avatar.loadFile(SAVE_FILE);
         ter = new TERenderer();
         ter.initialize(roku.getWorld().length, roku.getWorld()[0].length + 2);
