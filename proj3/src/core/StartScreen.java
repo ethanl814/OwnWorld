@@ -164,11 +164,11 @@ public class StartScreen {
         if (aang.getTheme() == "forest") {
             StdDraw.setFont(new Font("Papyrus", Font.BOLD, 75));
             StdDraw.setPenColor(StdDraw.GREEN);
-            StdDraw.text(400, 420, "FOREST");
+            StdDraw.text(400, 455, "FOREST");
             StdDraw.setFont(new Font("Papyrus", Font.PLAIN, 18));
             StdDraw.setPenColor(StdDraw.WHITE);
-            StdDraw.text(650, 100, "your avatar has a new style");
-            StdDraw.text(650, 80, "of bending in the forest...");
+            StdDraw.text(650, 100, "your avatar has discovered a new");
+            StdDraw.text(650, 80, "style of bending in the forest...");
             StdDraw.text(650, 60, "wood bending");
             StdDraw.text(650, 40, "season 5 coming soon");
         }
@@ -221,7 +221,7 @@ public class StartScreen {
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         StdDraw.text(16, 51, "cores left: " + aang.getCoresLeft());
         StdDraw.setPenColor(Color.green);
-        StdDraw.text(26, 51, "current theme: " + aang.getTheme());
+        StdDraw.text(25, 51, "current theme: " + aang.getTheme());
         StdDraw.setPenColor(Color.orange);
         StdDraw.text(34, 51, "seed: " + aang.getID());
         StdDraw.setPenColor(Color.magenta);
