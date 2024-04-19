@@ -6,6 +6,7 @@ import tileengine.TERenderer;
 import tileengine.TETile;
 import tileengine.Tileset;
 import utils.FileUtils;
+import utils.RandomUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Random;
 public class Avatar {
     private TETile[][] world;
     private TETile[][] base;
+    private TETile[][] visionboard;
     private TERenderer ter;
     private int height;
     private int width;
@@ -23,8 +25,10 @@ public class Avatar {
     private int coresLeft;
     private List<int[]> cores;
     private long seedID;
+    private Random seed;
     private boolean isGameOver;
     private static int theme;
+    private boolean sight;
     private static final String SAVE_FILE = "save.txt";
     private StartScreen screen;
     public Avatar(World world) {
@@ -49,6 +53,10 @@ public class Avatar {
 
         seedID = world.getSeedID();
         screen = new StartScreen();
+
+        seed = new Random(seedID);
+
+        sight = true;
     }
 
     //themeifies the world
@@ -56,12 +64,12 @@ public class Avatar {
         if (theme == 1) {
             return themeifyHelper(world, Tileset.GRASS, Tileset.WATER, Tileset.CELL, Tileset.FLOWER);
         } else if (theme == 2) {
-            return themeifyHelper(world, Tileset.SAND, Tileset.MOUNTAIN, Tileset.RED_CELL, Tileset.AVATAR);
+            return themeifyHelper(world, Tileset.SAND, Tileset.MOUNTAIN, Tileset.RED_CELL, Tileset.TREE);
         } else {
             return world;
         }
     }
-
+w
     //helps themeify the world
     private TETile[][] themeifyHelper(TETile[][] tiles, TETile floors, TETile walls, TETile avatar, TETile cores) {
         int eight = tiles[0].length;
@@ -95,7 +103,8 @@ public class Avatar {
     }
 
     //builds avatar when loading file
-    public Avatar(TETile[][] world, TETile[][] base, int x, int y, long seedID, List<int[]> cores, int coresLeft) {
+    public Avatar(TETile[][] world, TETile[][] base, int x, int y, long seedID, List<int[]> cores, int coresLeft,
+                  boolean newsight, int newtheme) {
         this.world = world;
         this.base = base;
         height = this.world[0].length;
@@ -106,6 +115,9 @@ public class Avatar {
         this.coresLeft = coresLeft;
         screen = new StartScreen();
         this.seedID = seedID;
+        seed = new Random(seedID);
+        this.sight = newsight;
+        theme = newtheme;
     }
 
     //allows for movement, saving, loading
@@ -118,7 +130,15 @@ public class Avatar {
                 if (input == 'w' || input == 'a' || input == 's' || input == 'd' || input == 'W' || input == 'A'
                         || input == 'S' || input == 'D') {
                     move(input);
-                    ter.drawTiles(getWorld());
+                    if (!sight) {
+                        ter.drawTiles(vision());
+                    } else {
+                        ter.drawTiles(getWorld());
+                    }
+                }
+                if (input == 'o' || input == 'O') {
+                    sight = !sight;
+                    ter.drawTiles(vision());
                 }
                 if (input == 'l' || input == 'L') {
                     loadFile(SAVE_FILE);
@@ -129,15 +149,34 @@ public class Avatar {
                 if (input == 't' || input == 'T') {
                     screen.themeScreen();
                 }
+                if (coresLeft == 0) {
+                    //encounter here
+                }
             }
             renderBoard();
         }
         screen.gameOverScreen();
+        StdDraw.show();
     }
     public static void changeTheme(char input) {
         theme = Character.getNumericValue(input);
     }
 
+    private TETile[][] vision() {
+        int eight = world[0].length;
+        int idth = world.length;
+        TETile[][] ret = new TETile[idth][eight];
+        for (int i = 0; i < world.length; i++) {
+            for (int j = 0; j < world[0].length; j++) {
+                if (i - x <= 3 && j - y <= 3 && x - i <= 3 && y - j <= 3) {
+                    ret[i][j] = world[i][j];
+                } else {
+                    ret[i][j] = Tileset.NOTHING;
+                }
+            }
+        }
+        return ret;
+    }
 
     //calls save file
     public void saveFileCaller() {
@@ -161,22 +200,27 @@ public class Avatar {
 //        System.out.println(getWorld());
         StdDraw.clear(StdDraw.BLACK);
         hud();
-        System.out.println(seedID);
-        ter.drawTiles(getWorld());
+        if (sight) {
+            ter.drawTiles(getWorld());
+        } else {
+            ter.drawTiles(vision());
+        }
         //renderAvatar();
         StdDraw.show();
     }
     public void hud() {
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         StdDraw.setPenColor(Color.white);
-        StdDraw.text(10, 51, "press 't' to change theme");
+        StdDraw.text(6, 51, "press 't' to change theme");
         StdDraw.setPenColor(Color.RED);
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        StdDraw.text(21, 51, "cores left: " + cores.size());
+        StdDraw.text(16, 51, "cores left: " + cores.size());
         StdDraw.setPenColor(Color.green);
-        StdDraw.text(31, 51, "current theme: " + getTheme());
+        StdDraw.text(26, 51, "current theme: " + getTheme());
         StdDraw.setPenColor(Color.orange);
-        StdDraw.text(40, 51, "seed: " + seedID);
+        StdDraw.text(34, 51, "seed: " + seedID);
+        StdDraw.setPenColor(Color.magenta);
+        StdDraw.text(44, 51, "press 'o' to toggle sight");
     }
     public String getTheme() {
         if (theme == 1) {
@@ -232,7 +276,6 @@ public class Avatar {
                 checkBoard(x, y);
             }
         }
-
         if (coresLeft == 0) {
             isGameOver = true;
         }
@@ -241,7 +284,7 @@ public class Avatar {
     //saves the current state of the world
     public Avatar saveFile() {
         isGameOver = true;
-        String ret = width + " " + height + " " + seedID; //saves dimensions
+        String ret = width + " " + height + " " + seedID + " " + sight + " " + theme; //saves dimensions
         for (int y1 = height - 1; y1 >= 0; y1--) { //saves curr state
             ret = ret + "\n";
             for (int x1 = 0; x1 < width; x1++) {
@@ -287,6 +330,8 @@ public class Avatar {
         int newidth = 0;
         int newheight = 0;
         long newID = 0;
+        boolean newsight = false;
+        int newtheme = 0;
         List<int[]> newcores = new ArrayList<>();
         int newCoresLeft = 0;
         In file = new In(filename);
@@ -296,6 +341,8 @@ public class Avatar {
             newidth = Integer.parseInt(line1[0]);
             newheight = Integer.parseInt(line1[1]);
             newID = Long.parseLong(line1[2]);
+            newsight = Boolean.parseBoolean(line1[3]);
+            newtheme = Integer.parseInt(line1[4]);
         }
         TETile[][] ret = new TETile[newidth][newheight];
         World.fillWithNothing(ret);
@@ -347,7 +394,7 @@ public class Avatar {
         load.add(newbase);
 
 
-        Avatar mayberet = new Avatar(load.get(0), load.get(1), aX, aY, newID, newcores, newCoresLeft);
+        Avatar mayberet = new Avatar(load.get(0), load.get(1), aX, aY, newID, newcores, newCoresLeft, newsight, newtheme);
         return mayberet;
     }
 

@@ -24,7 +24,7 @@ public class StartScreen {
         StdDraw.text(400, 400, "New Game (N)");
         StdDraw.text(400, 350, "Load Game (L)");
         StdDraw.text(400, 300, "Quit (Q)");
-        StdDraw.text(400, 200, "if you are reading this you ass at basketball");
+        StdDraw.text(400, 200, "if you are reading this you suck at basketball");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         StdDraw.text(80, 780, "look top right");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 23));
@@ -157,10 +157,46 @@ public class StartScreen {
         StdDraw.setYscale(0, DEFAULT_HEIGHT);
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 120));
-        StdDraw.text(400, 550, "GAME OVER");
+        StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 55));
+        StdDraw.text(400, 650, "GAME OVER");
         StdDraw.text(400, 500, "YOU HAVE BEAT THE");
-        if (aang.getTheme() == )
+        if (aang.getTheme() == "forest") {
+            StdDraw.setFont(new Font("Papyrus", Font.BOLD, 75));
+            StdDraw.setPenColor(StdDraw.GREEN);
+            StdDraw.text(400, 420, "FOREST");
+            StdDraw.setFont(new Font("Papyrus", Font.PLAIN, 18));
+            StdDraw.setPenColor(StdDraw.WHITE);
+            StdDraw.text(650, 100, "your avatar has a new style");
+            StdDraw.text(650, 80, "of bending in the forest...");
+            StdDraw.text(650, 60, "wood bending");
+            StdDraw.text(650, 40, "season 5 coming soon");
+        }
+        if (aang.getTheme() == "desert") {
+            StdDraw.setFont(new Font("Algerian", Font.BOLD, 75));
+            StdDraw.setPenColor(StdDraw.YELLOW);
+            StdDraw.text(400, 420, "DESERT");
+            StdDraw.setFont(new Font("Algerian", Font.PLAIN, 18));
+            StdDraw.setPenColor(StdDraw.WHITE);
+            StdDraw.text(650, 130, "have some 'dessert'");
+            StdDraw.text(650, 110, "hahaha");
+            StdDraw.text(650, 90, "what, was that joke too 'dry'?");
+            StdDraw.text(650, 70, "hehehe");
+            StdDraw.text(650, 50, "well you better find it funny");
+            StdDraw.text(650, 30, "because i am the lisan al gaib");
+            StdDraw.setFont(new Font("Algerian", Font.PLAIN, 22));
+            StdDraw.text(650, 10, "SILENCE");
+
+        }
+        if (aang.getTheme() == "default") {
+            StdDraw.setFont(new Font("Arial", Font.BOLD, 75));
+            StdDraw.text(400, 420, "DEFAULT");
+            StdDraw.setFont(new Font("Arial", Font.PLAIN, 18));
+            StdDraw.text(650, 100, "you really didn't change the theme??");
+            StdDraw.text(650, 80, "looks like you are the default here");
+            StdDraw.text(650, 60, "*default dances*");
+        }
+        StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 55));
+        StdDraw.text(400, 350, "THEMED GAME");
     }
 
     public void makeWorld(String in) {
