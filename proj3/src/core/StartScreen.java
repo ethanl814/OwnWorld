@@ -169,11 +169,11 @@ public class StartScreen {
             }
         }
         aang = aang.saveFile();
-        Avatar roku = Avatar.loadFile(SAVE_FILE);
+        aang = Avatar.loadFile(SAVE_FILE);
         ter = new TERenderer();
-        ter.initialize(roku.getWorld().length, roku.getWorld()[0].length + 2);
-        ter.drawTiles(roku.getWorld());
-        roku.runGame();//aang.runGame();
+        ter.initialize(aang.getWorld().length, aang.getWorld()[0].length + 2);
+        ter.drawTiles(aang.getWorld());
+        aang.runGame();//aang.runGame();
     }
 
     public void makeWorld(String in) {
