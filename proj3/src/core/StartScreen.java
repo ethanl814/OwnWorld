@@ -209,7 +209,6 @@ public class StartScreen {
             StdDraw.text(650, 30, "because i am the lisan al gaib");
             StdDraw.setFont(new Font("Algerian", Font.PLAIN, 22));
             StdDraw.text(650, 10, "SILENCE");
-
         }
         StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 55));
         StdDraw.text(400, 350, "THEMED GAME");
