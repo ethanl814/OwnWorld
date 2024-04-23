@@ -41,7 +41,8 @@ public class StartScreen {
         StdDraw.text(400, 400, "New Game (N)");
         StdDraw.text(400, 350, "Load Game (L)");
         StdDraw.text(400, 300, "Quit (Q)");
-        StdDraw.text(400, 200, "if you are reading this you suck at basketball");
+        StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 32));
+        StdDraw.text(400, 200, "if you are reading this you are literate");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         StdDraw.text(80, 780, "look top right");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 23));
@@ -49,7 +50,7 @@ public class StartScreen {
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         StdDraw.text(736, 10, "look bottom left");
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-        StdDraw.text(35, 10, "good boy");
+        StdDraw.text(35, 10, "good job");
         getInput();
     }
     public void getInput() {
