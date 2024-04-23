@@ -9,6 +9,8 @@ import tileengine.Tileset;
 
 public class AutograderBuddy {
 
+    private static final String SAVE_FILE = "save.txt";
+
 
     /**
      * Simulates a game, but doesn't render anything or call any StdDraw
@@ -62,7 +64,7 @@ public class AutograderBuddy {
 
         for (int j = 0; j < movement.length(); j++) {
             if (movement.charAt(j) == ':' && movement.charAt(j + 1) == 'q') {
-                aang.saveFile();
+                aang.saveFile(SAVE_FILE);
                 return aang.getWorld();
             }
             aang.move(movement.charAt(j));

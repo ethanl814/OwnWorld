@@ -1,19 +1,34 @@
 package core;
 
+import edu.princeton.cs.algs4.In;
 import tileengine.TERenderer;
 import edu.princeton.cs.algs4.StdDraw;
+import tileengine.TETile;
+import tileengine.Tileset;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 //import java.util.Scanner;
 
 public class StartScreen {
-    private static final int DEFAULT_WIDTH = 800;
-    private static final int DEFAULT_HEIGHT = 800;
+    private final int DEFAULT_WIDTH = 800;
+    private final int DEFAULT_HEIGHT = 800;
     private TERenderer ter;
-    private static Avatar aang;
+    private Avatar aang;
     private String currTile;
     private String fakeTile;
-    private static final String SAVE_FILE = "save.txt";
+    private String theme;
+    private final String SAVE_FILE = "save.txt";
+    private final String THEME_SAVE = "theme.txt";
     public StartScreen() { }
+    public StartScreen(Avatar vivek, String currTile, String fakeTile, String theme) {
+        aang = vivek;
+        this.currTile = currTile;
+        this.fakeTile = fakeTile;
+        this.theme = theme;
+    }
+
     public void realStartScreen() {
         StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         StdDraw.setXscale(0, DEFAULT_WIDTH);
@@ -143,12 +158,12 @@ public class StartScreen {
         boolean run = true;
         while (run) {
             while (StdDraw.hasNextKeyTyped()) {
-                Avatar.changeTheme(StdDraw.nextKeyTyped());
+                aang.changeTheme(StdDraw.nextKeyTyped()); //themechanged
                 run = false;
             }
         }
-        aang = aang.saveFile();
-        aang = Avatar.loadFile(SAVE_FILE);
+        aang = aang.saveFile(THEME_SAVE);
+        aang = aang.loadFile(THEME_SAVE);
         ter = new TERenderer();
         ter.initialize(aang.getWorld().length, aang.getWorld()[0].length + 2);
         ter.drawTiles(aang.getWorld());
@@ -163,7 +178,14 @@ public class StartScreen {
         StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 55));
         StdDraw.text(400, 650, "GAME OVER");
         StdDraw.text(400, 500, "YOU HAVE BEAT THE");
-        if (aang.getTheme().equals("forest")) {
+        if (overtheme().equals("default")) {
+            StdDraw.setFont(new Font("Arial", Font.BOLD, 75));
+            StdDraw.text(400, 420, "DEFAULT");
+            StdDraw.setFont(new Font("Arial", Font.PLAIN, 18));
+            StdDraw.text(650, 100, "you really didn't change the theme??");
+            StdDraw.text(650, 80, "looks like you are the default here");
+            StdDraw.text(650, 60, "*default dances*");
+        } else if (overtheme().equals("forest")) {
             StdDraw.setFont(new Font("Papyrus", Font.BOLD, 75));
             StdDraw.setPenColor(StdDraw.GREEN);
             StdDraw.text(400, 455, "FOREST");
@@ -173,8 +195,7 @@ public class StartScreen {
             StdDraw.text(650, 80, "style of bending in the forest...");
             StdDraw.text(650, 60, "wood bending");
             StdDraw.text(650, 40, "season 5 coming soon");
-        }
-        if (aang.getTheme().equals("desert")) {
+        } else if (overtheme().equals("desert")) {
             StdDraw.setFont(new Font("Algerian", Font.BOLD, 75));
             StdDraw.setPenColor(StdDraw.YELLOW);
             StdDraw.text(400, 420, "DESERT");
@@ -190,14 +211,6 @@ public class StartScreen {
             StdDraw.text(650, 10, "SILENCE");
 
         }
-        if (aang.getTheme().equals("default")) {
-            StdDraw.setFont(new Font("Arial", Font.BOLD, 75));
-            StdDraw.text(400, 420, "DEFAULT");
-            StdDraw.setFont(new Font("Arial", Font.PLAIN, 18));
-            StdDraw.text(650, 100, "you really didn't change the theme??");
-            StdDraw.text(650, 80, "looks like you are the default here");
-            StdDraw.text(650, 60, "*default dances*");
-        }
         StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 55));
         StdDraw.text(400, 350, "THEMED GAME");
     }
@@ -210,9 +223,8 @@ public class StartScreen {
         aang.runGame();
     }
     public void loadWorld() {
-        Avatar kyoshi = Avatar.loadFile(SAVE_FILE);
-        aang = kyoshi;
-        kyoshi.runGame();
+        aang = load(SAVE_FILE);
+        aang.runGame();
     }
 
     public void hud() {
@@ -223,7 +235,7 @@ public class StartScreen {
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         StdDraw.text(13, 51, "cores left: " + aang.getCoresLeft());
         StdDraw.setPenColor(Color.green);
-        StdDraw.text(23, 52, "current theme: " + aang.getTheme());
+        StdDraw.text(23, 52, "current theme: " + theme);
         StdDraw.setPenColor(Color.orange);
         StdDraw.text(28, 51, "seed: " + aang.getID());
         StdDraw.setPenColor(Color.magenta);
@@ -232,10 +244,100 @@ public class StartScreen {
         StdDraw.text(43, 51, "current tile: " + currTile);
         //StdDraw.text(33, 51, "current tile: " + fakeTile);
     }
-    public void changeCurrTile(String s) {
-        currTile = s;
+
+    public Avatar load(String filename) {
+        List<TETile[][]> load = new ArrayList<>();
+        int aX = 0;
+        int aY = 0;
+        int newidth = 0;
+        int newheight = 0;
+        long newID = 0;
+        boolean newsight = false;
+        int newtheme = 0;
+        int[] coords;
+        List<int[]> newcores = new ArrayList<>();
+        int newCoresLeft = 0;
+        In file = new In(filename);
+
+        if (file.hasNextLine()) {
+            String[] line1 = file.readLine().split(" ");
+            newidth = Integer.parseInt(line1[0]);
+            newheight = Integer.parseInt(line1[1]);
+            newID = Long.parseLong(line1[2]);
+            newsight = Boolean.parseBoolean(line1[3]);
+            newtheme = Integer.parseInt(line1[4]);
+        }
+        TETile[][] ret = new TETile[newidth][newheight];
+        World.fillWithNothing(ret);
+        int y1 = newheight - 1;
+        while (file.hasNextLine()) {
+            String[] line = file.readLine().split("");
+            if (line[0].equals("b")) {
+                break;
+            }
+            for (int x1 = 0; x1 < newidth; x1++) {
+                if (line[x1].equals("#")) {
+                    ret[x1][y1] = Tileset.WALL;
+                } else if (line[x1].equals(".")) {
+                    ret[x1][y1] = Tileset.FLOOR;
+                } else if (line[x1].equals("c")) {
+                    ret[x1][y1] = Tileset.CELL;
+                    int[] core = new int[]{x1, y1};
+                    newcores.add(core);
+                    newCoresLeft++;
+                } else if (line[x1].equals("@")) {
+                    ret[x1][y1] = Tileset.AVATAR;
+                    aX = x1;
+                    aY = y1;
+                }
+            }
+            y1--;
+        }
+        load.add(ret);
+
+
+
+
+        TETile[][] newbase = new TETile[newidth][newheight];
+        World.fillWithNothing(newbase);
+        y1 = newheight - 1;
+        while (file.hasNextLine()) {
+            String[] line = file.readLine().split("");
+            for (int x1 = 0; x1 < newidth; x1++) {
+                if (line[x1].equals("#")) {
+                    newbase[x1][y1] = Tileset.WALL;
+                } else if (line[x1].equals(".")) {
+                    newbase[x1][y1] = Tileset.FLOOR;
+                } else if (line[x1].equals("@")) {
+                    newbase[x1][y1] = Tileset.AVATAR;
+                }
+            }
+            y1--;
+        }
+        load.add(newbase);
+
+        coords = new int[]{aX, aY};
+        Avatar mayberet = new Avatar(load.get(0), load.get(1), coords, newID, newcores,
+                newCoresLeft, newsight, newtheme);
+        return mayberet;
     }
-    public void fakeChangeCurrTile(int x, int y) {
-        fakeTile = (x + " " + y);
+
+    private String overtheme() {
+        In file = new In(THEME_SAVE);
+        int newtheme = 0;
+
+        if (file.hasNextLine()) {
+            String[] line1 = file.readLine().split(" ");
+            newtheme = Integer.parseInt(line1[4]);
+        }
+
+        if (newtheme == 1) {
+            return "forest";
+        }
+        if (newtheme == 2) {
+            return "desert";
+        }
+
+        return "default";
     }
 }

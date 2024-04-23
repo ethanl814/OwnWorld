@@ -19,6 +19,8 @@ public class Avatar {
     private TERenderer ter;
     private int height;
     private int width;
+    private String currTile;
+    private String fakeTile;
     private int x;
     private int y;
     private int coresLeft;
@@ -26,10 +28,10 @@ public class Avatar {
     private long seedID;
     private Random seed;
     private boolean isGameOver;
-    private static int theme;
+    private int theme;
     private boolean sight;
-    private static final String SAVE_FILE = "save.txt";
-    private StartScreen screen;
+    private final String SAVE_FILE = "save.txt";
+    private final String THEME_SAVE = "theme.txt";
     public Avatar(World world) {
         this.world = world.getWorld(); //builds the world
         this.base = buildBase(world.getWorld());
@@ -51,7 +53,6 @@ public class Avatar {
         coresLeft = cores.size();
 
         seedID = world.getSeedID();
-        screen = new StartScreen();
 
         seed = new Random(seedID);
 
@@ -118,7 +119,6 @@ public class Avatar {
         this.y = coords[1];
         this.cores = cores;
         this.coresLeft = coresLeft;
-        screen = new StartScreen();
         this.seedID = seedID;
         seed = new Random(seedID);
         this.sight = newsight;
@@ -148,28 +148,31 @@ public class Avatar {
                     saveFileCaller();
                 }
                 if (input == 't' || input == 'T') {
-                    screen.themeScreen();
+                    screen().themeScreen();
                 }
             }
+            //System.out.println(theme);
             renderBoard();
             double x9 = StdDraw.mouseX();
             double y9 = StdDraw.mouseY();
             mouseTrack(x9, y9);
         }
-        screen.gameOverScreen();
+        renderBoard();
+        screen().gameOverScreen();
         StdDraw.show();
     }
     public void mouseTrack(double x9, double y9) {
         int arrX = (int) x9;
         int arrY = (int) y9;
         if (arrX < 0 || arrX >= width || arrY < 0 || arrY >= height) {
-            screen.changeCurrTile("nothing");
+            currTile = "nothing";
+            fakeTile = "out of this world";
             return;
         }
-        screen.changeCurrTile(getWorld()[arrX][arrY].description());
-        screen.fakeChangeCurrTile(arrX, arrY);
+        fakeTile = arrX + " " + arrY;
+        currTile = getWorld()[arrX][arrY].description();
     }
-    public static void changeTheme(char input) {
+    public void changeTheme(char input) {
         theme = Character.getNumericValue(input);
     }
 
@@ -197,7 +200,7 @@ public class Avatar {
                 if (input != 'q' && input != 'Q') {
                     runGame();
                 } else {
-                    saveFile();
+                    saveFile(SAVE_FILE);
                     System.exit(0);
                 }
             }
@@ -208,7 +211,7 @@ public class Avatar {
     //renders the board(for main)
     private void renderBoard() {
         StdDraw.clear(StdDraw.BLACK);
-        screen.hud();
+        screen().hud();
         ter.drawTiles(getWorld());
         //renderAvatar();
         StdDraw.show();
@@ -283,7 +286,7 @@ public class Avatar {
     }
 
     //saves the current state of the world
-    public Avatar saveFile() {
+    public Avatar saveFile(String file) {
         isGameOver = true;
         String ret = width + " " + height + " " + seedID + " " + sight + " " + theme; //saves dimensions
         for (int y1 = height - 1; y1 >= 0; y1--) { //saves curr state
@@ -319,12 +322,12 @@ public class Avatar {
         }
         ret = ret + "\n";
 
-        FileUtils.writeFile(SAVE_FILE, ret);
+        FileUtils.writeFile(file, ret);
         return this;
     }
 
     //returns a list with elem 0 being the base world and elem 1 being the current state
-    public static Avatar loadFile(String filename) {
+    public Avatar loadFile(String filename) {
         List<TETile[][]> load = new ArrayList<>();
         int aX = 0;
         int aY = 0;
@@ -412,5 +415,9 @@ public class Avatar {
             }
         }
         return ret;
+    }
+    
+    public StartScreen screen() {
+        return new StartScreen(this, currTile, fakeTile, getTheme());
     }
 }
