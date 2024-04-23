@@ -2,6 +2,8 @@ package core;
 
 import tileengine.TERenderer;
 import edu.princeton.cs.algs4.StdDraw;
+import tileengine.TETile;
+
 import java.awt.*;
 //import java.util.Scanner;
 
@@ -10,6 +12,8 @@ public class StartScreen {
     private static final int DEFAULT_HEIGHT = 800;
     private TERenderer ter;
     private static Avatar aang;
+    private String currTile;
+    private String fakeTile;
     private static final String SAVE_FILE = "save.txt";
     public StartScreen() {}
     public void realStartScreen() {
@@ -216,16 +220,24 @@ public class StartScreen {
     public void hud() {
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         StdDraw.setPenColor(Color.white);
-        StdDraw.text(6, 51, "press 't' to change theme");
+        StdDraw.text(8, 52, "press 't' to change theme");
         StdDraw.setPenColor(Color.RED);
         StdDraw.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        StdDraw.text(16, 51, "cores left: " + aang.getCoresLeft());
+        StdDraw.text(13, 51, "cores left: " + aang.getCoresLeft());
         StdDraw.setPenColor(Color.green);
-        StdDraw.text(25, 51, "current theme: " + aang.getTheme());
+        StdDraw.text(23, 52, "current theme: " + aang.getTheme());
         StdDraw.setPenColor(Color.orange);
-        StdDraw.text(34, 51, "seed: " + aang.getID());
+        StdDraw.text(28, 51, "seed: " + aang.getID());
         StdDraw.setPenColor(Color.magenta);
-        StdDraw.text(44, 51, "press 'o' to toggle sight");
+        StdDraw.text(38, 52, "press 'o' to toggle sight");
+        StdDraw.setPenColor(Color.cyan);
+        StdDraw.text(43, 51, "current tile: " + currTile);
+        StdDraw.text(33, 51, "current tile: " + fakeTile);
     }
-
+    public void changeCurrTile(String s) {
+        currTile = s;
+    }
+    public void fakeChangeCurrTile(int x, int y) {
+        fakeTile = (x + " " + y);
+    }
 }

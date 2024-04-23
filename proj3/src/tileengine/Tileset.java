@@ -24,17 +24,19 @@ public class Tileset {
     public static final TETile NOTHING = new TETile(' ', Color.black, Color.black, "nothing", 3);
     public static final TETile GRASS = new TETile('"', Color.green, Color.black, "grass", 4);
     public static final TETile WATER = new TETile('≈', Color.blue, Color.black, "water", 5);
-    public static final TETile FLOWER = new TETile('❀', Color.magenta, Color.pink, "flower", 6);
+    public static final TETile FLOWER = new TETile('❀', Color.magenta, Color.pink, "you", 6);
     public static final TETile LOCKED_DOOR = new TETile('█', Color.orange, Color.black,
             "locked door", 7);
     public static final TETile UNLOCKED_DOOR = new TETile('▢', Color.orange, Color.black,
             "unlocked door", 8);
     public static final TETile SAND = new TETile('▒', Color.yellow, Color.black, "sand", 9);
     public static final TETile MOUNTAIN = new TETile('▲', Color.gray, Color.black, "mountain", 10);
-    public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree", 11);
+    public static final TETile TREE = new TETile('♠', Color.green, Color.black, "desert core", 11);
 
-    public static final TETile CELL = new TETile('█', Color.BLUE, Color.black, "cell", 12);
-    public static final TETile RED_CELL = new TETile('█', Color.RED, Color.black, "cell", 13);
+    public static final TETile CELL = new TETile('█', Color.BLUE, Color.black, "core", 12);
+    public static final TETile YELLOW_CELL = new TETile('█', Color.YELLOW, Color.black, "core", 13);
+
+    public static final TETile RED_CELL = new TETile('█', Color.RED, Color.black, "you", 14);
 }
 
 

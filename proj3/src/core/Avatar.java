@@ -67,7 +67,7 @@ public class Avatar {
             tiles = vision();
         }
         if (theme == 1) {
-            return themeifyHelper(tiles, Tileset.GRASS, Tileset.WATER, Tileset.CELL, Tileset.FLOWER);
+            return themeifyHelper(tiles, Tileset.GRASS, Tileset.WATER, Tileset.FLOWER, Tileset.YELLOW_CELL);
         } else if (theme == 2) {
             return themeifyHelper(tiles, Tileset.SAND, Tileset.MOUNTAIN, Tileset.RED_CELL, Tileset.TREE);
         } else {
@@ -128,7 +128,7 @@ public class Avatar {
     //allows for movement, saving, loading
     public void runGame() {
         ter = new TERenderer();
-        ter.initialize(width, height + 2);
+        ter.initialize(width, height + 3);
         while (!isGameOver) {
             while (StdDraw.hasNextKeyTyped()) {
                 char input = StdDraw.nextKeyTyped();
@@ -152,9 +152,22 @@ public class Avatar {
                 }
             }
             renderBoard();
+            double x = StdDraw.mouseX();
+            double y = StdDraw.mouseY();
+            mouseTrack(x, y);
         }
         screen.gameOverScreen();
         StdDraw.show();
+    }
+    public void mouseTrack(double x, double y) {
+        int arrX = (int) x;
+        int arrY = (int) y;
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            screen.changeCurrTile("nothing");
+            return;
+        }
+        screen.changeCurrTile(getWorld()[arrX][arrY].description());
+        screen.fakeChangeCurrTile(arrX, arrY);
     }
     public static void changeTheme(char input) {
         theme = Character.getNumericValue(input);
