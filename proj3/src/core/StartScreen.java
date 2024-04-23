@@ -232,7 +232,7 @@ public class StartScreen {
         StdDraw.text(38, 52, "press 'o' to toggle sight");
         StdDraw.setPenColor(Color.cyan);
         StdDraw.text(43, 51, "current tile: " + currTile);
-        StdDraw.text(33, 51, "current tile: " + fakeTile);
+        //StdDraw.text(33, 51, "current tile: " + fakeTile);
     }
     public void changeCurrTile(String s) {
         currTile = s;
