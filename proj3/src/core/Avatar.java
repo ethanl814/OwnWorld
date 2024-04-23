@@ -152,17 +152,17 @@ public class Avatar {
                 }
             }
             renderBoard();
-            double x = StdDraw.mouseX();
-            double y = StdDraw.mouseY();
-            mouseTrack(x, y);
+            double x9 = StdDraw.mouseX();
+            double y9 = StdDraw.mouseY();
+            mouseTrack(x9, y9);
         }
         screen.gameOverScreen();
         StdDraw.show();
     }
-    public void mouseTrack(double x, double y) {
-        int arrX = (int) x;
-        int arrY = (int) y;
-        if (x < 0 || x >= width || y < 0 || y >= height) {
+    public void mouseTrack(double x9, double y9) {
+        int arrX = (int) x9;
+        int arrY = (int) y9;
+        if (arrX < 0 || arrX >= width || arrY < 0 || arrY >= height) {
             screen.changeCurrTile("nothing");
             return;
         }

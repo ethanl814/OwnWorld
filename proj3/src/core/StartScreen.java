@@ -2,8 +2,6 @@ package core;
 
 import tileengine.TERenderer;
 import edu.princeton.cs.algs4.StdDraw;
-import tileengine.TETile;
-
 import java.awt.*;
 //import java.util.Scanner;
 
@@ -15,7 +13,7 @@ public class StartScreen {
     private String currTile;
     private String fakeTile;
     private static final String SAVE_FILE = "save.txt";
-    public StartScreen() {}
+    public StartScreen() { }
     public void realStartScreen() {
         StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         StdDraw.setXscale(0, DEFAULT_WIDTH);
@@ -154,7 +152,7 @@ public class StartScreen {
         ter = new TERenderer();
         ter.initialize(aang.getWorld().length, aang.getWorld()[0].length + 2);
         ter.drawTiles(aang.getWorld());
-        aang.runGame();//aang.runGame();
+        aang.runGame(); //aang.runGame();
     }
     public void gameOverScreen() {
         StdDraw.setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -165,7 +163,7 @@ public class StartScreen {
         StdDraw.setFont(new Font("Comic Sans MS", Font.BOLD, 55));
         StdDraw.text(400, 650, "GAME OVER");
         StdDraw.text(400, 500, "YOU HAVE BEAT THE");
-        if (aang.getTheme() == "forest") {
+        if (aang.getTheme().equals("forest")) {
             StdDraw.setFont(new Font("Papyrus", Font.BOLD, 75));
             StdDraw.setPenColor(StdDraw.GREEN);
             StdDraw.text(400, 455, "FOREST");
@@ -176,7 +174,7 @@ public class StartScreen {
             StdDraw.text(650, 60, "wood bending");
             StdDraw.text(650, 40, "season 5 coming soon");
         }
-        if (aang.getTheme() == "desert") {
+        if (aang.getTheme().equals("desert")) {
             StdDraw.setFont(new Font("Algerian", Font.BOLD, 75));
             StdDraw.setPenColor(StdDraw.YELLOW);
             StdDraw.text(400, 420, "DESERT");
@@ -192,7 +190,7 @@ public class StartScreen {
             StdDraw.text(650, 10, "SILENCE");
 
         }
-        if (aang.getTheme() == "default") {
+        if (aang.getTheme().equals("default")) {
             StdDraw.setFont(new Font("Arial", Font.BOLD, 75));
             StdDraw.text(400, 420, "DEFAULT");
             StdDraw.setFont(new Font("Arial", Font.PLAIN, 18));
